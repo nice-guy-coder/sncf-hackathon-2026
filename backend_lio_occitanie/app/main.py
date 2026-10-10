@@ -453,3 +453,70 @@ def feedback_summary(
         "responses": count,
         "anonymous": True
     }
+
+@app.get("/api/v1/sessions/{session_id}/recommendations")
+def recommendations(
+    session_id: str,
+    db: Session = Depends(get_db)
+):
+    s = db.get(ProjectSession, session_id)
+
+    if not s:
+        raise HTTPException(
+            404,
+            detail={"code": "session_not_found"}
+        )
+
+    stmt = select(Accommodation)
+
+    if s.destination_text:
+        stmt = stmt.where(
+            Accommodation.nearby_sites_raw.ilike(
+                f"%{s.destination_text}%"
+            )
+        )
+
+    rows = db.scalars(
+        stmt.limit(10)
+    ).all()
+
+    return {
+        "session_id": session_id,
+        "items": [
+            {
+                "id": r.id,
+                "name": r.name,
+                "commune": r.commune,
+                "department": r.department,
+                "capacity": r.total_capacity,
+                "reason": "matching_destination"
+            }
+            for r in rows
+        ]
+    }
+
+@app.post("/api/v1/itineraries/compare")
+def compare_itineraries(
+    body: CompareItinerariesIn,
+    db: Session = Depends(get_db)
+):
+    rows = db.scalars(
+        select(Itinerary)
+        .where(
+            Itinerary.id.in_(body.itinerary_ids)
+        )
+    ).all()
+
+    return {
+        "items": [
+            {
+                "id": i.id,
+                "duration_minutes": i.total_train_minutes,
+                "transfer_count": i.transfer_count,
+                "status": i.source_status,
+                "confidence_score": i.confidence_score,
+                "warnings": i.warnings,
+            }
+            for i in rows
+        ]
+    }
