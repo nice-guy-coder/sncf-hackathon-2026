@@ -1,9 +1,9 @@
 # AUTEURS DU PROJET
-Matthias LOUBET
-Narayan BHATTARAI
-Sujan Man MANANDHAR
-Madxence SEJEAN
-Ciça COTRIM
+Matthias LOUBET matt.loubet@gmail.com <br>
+Narayan BHATTARAI nbarpan11@gmail.com <br>
+Sujan Man MANANDHAR  sujanmanpr@gmail.com <br>
+Madxence SEJEAN madxence.sejean@hotmail.com <br>
+Ciça COTRIM cicacotrim@gmail.com <br>
 
 # Copilote de sorties scolaires en train liO — Occitanie
 
