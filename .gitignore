@@ -8,3 +8,8 @@ __pycache__/
 .venv/
 models/*.bin
 *.bin
+node_modules/
+dist/
+test-results/
+playwright-report/
+*.tsbuildinfo

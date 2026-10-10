@@ -1,5 +1,13 @@
 """Analyse pédagogique et ferroviaire spécifique aux sorties scolaires liO Occitanie."""
 import re
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
+from .date_utils import normalize_date, strip_accents
+
+
+def last_match(pattern, text, flags=0):
+    matches = list(re.finditer(pattern, text, flags))
+    return matches[-1] if matches else None
 
 THEMES = {
     "patrimoine": [
@@ -61,12 +69,12 @@ def analyze_request(text: str) -> dict:
         result["class_level"] = m_class.group(2).strip()
 
     # 3. Nombre d'élèves
-    m_students = re.search(r"\b(\d{1,3})\s+(?:élèves|eleves|élève|eleve|enfants)\b", low)
+    m_students = last_match(r"\b(\d{1,3})\s+(?:élèves|eleves|élève|eleve|enfants)\b", low)
     if m_students:
         result["student_count"] = int(m_students.group(1))
 
     # 4. Nombre d'accompagnateurs
-    m_sup = re.search(r"\b(\d{1,2})\s+(?:accompagnateurs|accompagnateur|adultes|encadrants|profs|professeurs)\b", low)
+    m_sup = last_match(r"\b(\d{1,2})\s+(?:accompagnateurs|accompagnateur|adultes|encadrants|profs|professeurs)\b", low)
     if m_sup:
         result["supervisor_count"] = int(m_sup.group(1))
 
@@ -77,34 +85,38 @@ def analyze_request(text: str) -> dict:
         result["total_participants"] = students + supervisors
 
     # 5. Date
-    m_date = re.search(r"\b(20\d{2}-\d{2}-\d{2})\b", text)
+    m_date = last_match(r"\b(20\d{2}-\d{2}-\d{2})\b", text)
     if m_date:
         result["departure_date"] = m_date.group(1)
     else:
-        m_date_fr = re.search(r"\b(\d{1,2})[/.-](\d{1,2})[/.-](20\d{2})\b", text)
+        m_date_fr = last_match(r"\b(\d{1,2})[/.-](\d{1,2})[/.-](20\d{2})\b", text)
         if m_date_fr:
             result["departure_date"] = f"{m_date_fr.group(3)}-{int(m_date_fr.group(2)):02d}-{int(m_date_fr.group(1)):02d}"
+        else:
+            m_date_words = last_match(r"\b\d{1,2}(?:er)?\s+(?:janvier|fevrier|mars|avril|mai|juin|juillet|aout|septembre|octobre|novembre|decembre)\s+20\d{2}\b", strip_accents(low))
+            if m_date_words:
+                result["departure_date"] = normalize_date(m_date_words.group(0), datetime.now(ZoneInfo("Europe/Paris")).date())
+    if result["departure_date"]:
+        try:
+            date.fromisoformat(result["departure_date"])
+        except ValueError:
+            result["departure_date"] = None
 
     # 6. Gare ou ville de départ
-    m_dep = re.search(r"(?:au départ de|depart de|depuis|partons du collège de|partons du lycée de|partons de|partant de|gare de)\s+([A-Za-zÀ-ÿ' -]{2,60})", text, re.I)
+    m_dep = last_match(r"(?:au départ de|depart de|depuis|partons du collège de|partons du lycée de|partons de|partant de|gare de)\s+([A-Za-zÀ-ÿ' -]{2,60})", text, re.I)
     if m_dep:
         raw_dep = re.split(r",|\.|\s+le\s+|\s+pour\s+|\s+avec\s+|\s+en\s+", m_dep.group(1), flags=re.I)[0].strip()
         cleaned_dep = re.sub(r"^(?:collège de|college de|lycée de|lycee de|gare de|gare d')\s*", "", raw_dep, flags=re.I).strip()
         if cleaned_dep:
             result["departure_station_text"] = cleaned_dep.capitalize()
 
-    if not result["departure_station_text"]:
-        for city in KNOWN_CITIES:
-            if re.search(rf"\b(à|a|de)\s+{city}\b", low):
-                result["departure_station_text"] = city.capitalize()
-                break
-
     # 7. Destination
-    m_dest = re.search(r"(?:destination|visiter|aller à|aller a|à destination de|vers)\s+([A-Za-zÀ-ÿ' -]{2,60})", text, re.I)
+    m_dest = last_match(r"(?:à destination de|destination|visiter|aller à|aller a|vers)\s+([A-Za-zÀ-ÿ' -]{2,60})", text, re.I)
     if m_dest:
         raw_dest = re.split(r",|\.|\s+le\s+|\s+pour\s+|\s+avec\s+|\s+en\s+", m_dest.group(1), flags=re.I)[0].strip()
         cleaned_dest = re.sub(r"^(?:la ville de|la gare de)\s*", "", raw_dest, flags=re.I).strip()
-        if cleaned_dest and cleaned_dest.lower() != (result["departure_station_text"] or "").lower():
+        vague = re.match(r"^(?:et|est|inconnu|inconnue|connue|à définir|a definir|en tête|en tete|pour|pas|aucune)\b", cleaned_dest, re.I)
+        if cleaned_dest and not vague and cleaned_dest.lower() != (result["departure_station_text"] or "").lower():
             result["destination_text"] = cleaned_dest.capitalize()
             result["destination_known"] = True
             result["intent"] = "known_destination"

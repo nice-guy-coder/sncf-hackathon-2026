@@ -1,111 +1,68 @@
-# Copilote de Sorties Scolaires en Train liO — Occitanie
+# Backend Copilote Train liO Occitanie
 
-> **Hackathon SNCF For IA** : *« Dessine-moi une mobilité durable »*  
-> Solution digitale pour transformer le projet pédagogique d'un enseignant en une sortie scolaire pertinente, réalisable, rassurante et pré-réservable en train liO.
+API FastAPI du prototype de sorties scolaires. Voir [le démarrage frontend/backend](../README.md) et [l’analyse de cohérence](../docs/ANALYSE_COHERENCE.md).
 
----
+## Routes utilisées par React
 
-## 🚀 Architecture Intégrée : WhisperAI + LLM Local + Backend liO
+| Route | Comportement |
+|---|---|
+| `POST /api/v1/sessions` | Crée une session de projet. |
+| `GET /api/v1/sessions/{id}` | Lit le projet et ses sélections. |
+| `PATCH /api/v1/sessions/{id}` | Valide les données structurées, les dates et le groupe ≤ 50. Persiste les trains aller/retour ; un changement de trajet invalide les sélections. |
+| `POST /api/trips/analyze` | Extraction pédagogique par règles, date précise et questions de clarification. Une session existante accumule le texte. |
+| `POST /api/analyzeVoice` | Audio multipart → Whisper local → LLM local avec fallback heuristique ; renvoie la transcription et les catégories. |
+| `POST /api/destinations/search` | Recherche dans les hébergements importés (57 dans la source fournie), avec filtres de thèmes/commune/département et provenance. |
+| `POST /api/trains/search` | 503 sans source opérationnelle. `demo=true` active explicitement les données historiques. Date ISO obligatoire. |
+| `POST /api/trips/summary` | Récapitulatif du projet sauvegardé, sans train par défaut inventé. |
+| `POST /api/prereservations` | Enregistre une demande locale en attente et une copie du projet/itinéraire, avec référence. Aucun envoi SNCF ni email. |
+| `POST /api/feedback` | Enregistre quatre notes et un commentaire liés à la session. |
+| `GET /api/v1/accommodations` | Liste paginée des hébergements. |
+| `GET /health` | Santé de l’API et de la base. |
 
-Conformément à la spécification fonctionnelle et à l'architecture cible, l'API orchestre la chaîne complète d'acquisition vocale, de compréhension du langage naturel (LLM local) et de recherche ferroviaire :
+Les alias versionnés historiques restent disponibles ; Swagger expose les contrats exacts sur `/docs`. Le frontend technique d’origine est conservé sur `/test`. Son formulaire de trains doit envoyer une date et `demo=true` pour consulter la démonstration.
 
-```http
-POST /api/analyzeVoice         -> Audio (micro) -> Whisper local -> LLM local (Qwen2.5) -> JSON structuré
-POST /api/trips/analyze        -> Analyse de projet pédagogique en texte libre (thèmes, effectifs, dates)
-POST /api/destinations/search  -> Suggestions de sites & hébergements scolaires liO en Occitanie
-POST /api/trains/search        -> Horaires liO réels, Jauge groupe (50 pax) & Indice Confiance (/100)
-POST /api/trips/summary        -> Récapitulatif global du projet de voyage
-POST /api/prereservations      -> Demande de pré-réservation (référence dossier + statut pending)
-POST /api/feedback             -> Retour d'expérience après sortie pour nourrir l'indicateur
+## Données honnêtes
+
+Le fichier `lio_train_schedules.json` est dérivé d’une journée type de `Détail desserte (1).xlsx`, fourni pour février–juin 2026. Il ne valide pas les horaires pour une date demandée. Le générateur produit les places sous option par un hash et injecte des moyennes de régularité si une circulation est absente du CSV. Le score mêle ces données et des hypothèses de capacité/accès : il est donc signalé comme score de démonstration. L’autorisation groupes de chaque circulation reste à vérifier auprès d’une source opérationnelle.
+
+Les hébergements ne constituent pas un catalogue exhaustif de visites. Leurs gares sont provisoires et leurs distances sont à vol d’oiseau. L’API ne transforme plus ces distances en durée de marche et ne prétend pas vérifier le seuil d’accès de 20 minutes. Sans source fiable de durée, le filtre de durée indique qu’il n’a pas été appliqué.
+
+Le plafond de 50 voyageurs est confirmé par le cadrage. L’API n’incrémente pas la jauge de démonstration lors d’une demande et ne place aucune option réelle. Les avis sont conservés ; leur agrégation dans le score reste à implémenter.
+
+## Démarrage local
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+export DATABASE_URL=sqlite:///./data/lio.db
+python scripts/import_accommodations.py --file data/occitanie-hebergements-scolaires.xlsx
+uvicorn app.main:app --reload
 ```
 
-### Route vocale `/api/analyzeVoice`
-1. Reçoit le flux audio (WAV, WebM, MP3, OGG...).
-2. Transcrit l'audio via **WhisperAI** local (`ggml-base-q5_1`).
-3. Envoie la transcription en entrée au **LLM local** (Qwen 2.5 Instruct via serveur llama.cpp).
-4. Retourne les catégories extraites en JSON :
-   - `transcription` (texte brut retranscrit)
-   - `nombre_personnes` (int ou `null`)
-   - `date_depart` (format ISO `YYYY-MM-DD` ou `null`)
-   - `date_retour` (format ISO `YYYY-MM-DD` ou `null`)
-   - `lieu_depart` (str ou `null`)
-   - `destination` (str ou `null`)
-   - `destination_connue` (bool)
-   - `speech_detected` (bool)
+`DATABASE_URL` est lu depuis l’environnement du processus. La création des tables existante est conservée ; aucune migration de colonnes n’est nécessaire, les nouveaux paramètres du projet étant stockés dans `structured_request` et la demande dans `selected_itinerary`.
 
-> **Résilience & Fallback** : Si le serveur LLM est indisponible ou non démarré, le backend bascule automatiquement sur l'extracteur heuristique sans interrompre le service.
+`FRONTEND_ORIGINS` accepte une liste séparée par des virgules ; localhost et 127.0.0.1:5173 sont autorisés par défaut. Vite utilise un proxy `/api`, configurable avec `API_PROXY_TARGET`.
 
----
+## Audio et LLM
 
-## 🎯 Les 3 Briques Métier Clés Implémentées
+`POST /api/analyzeVoice` reçoit `file` (WAV, WebM, MP3, OGG…) et `language` (fr par défaut). La réponse expose `transcription`, `nombre_personnes`, `date_depart`, `date_retour`, `lieu_depart`, `destination`, `destination_connue` et `speech_detected`. Le frontend présente le texte pour correction puis utilise le contrat d’analyse pédagogique commun.
 
-1. **Jauge Intelligente de Pré-réservation (Plafond 50 pax)**
-   - Règle SNCF liO : 50 voyageurs maximum par train pour les groupes.
-   - Contrôle instantané de la disponibilité restante en tenant compte des options existantes :
-     $$\text{Places disponibles} = 50 - \text{Places sous option}$$
-   - Alerte visuelle claire si la capacité restante est insuffisante pour l'effectif de la classe.
+Le modèle Whisper GGML doit être présent dans `models/` ou indiqué par `WHISPER_MODEL_PATH`. Le client LLM appelle llama.cpp ; en cas d’indisponibilité, l’extracteur de voyage utilise les règles de fallback. La recherche et le formulaire peuvent fonctionner sans ces modèles.
 
-2. **Accessibilité Gare $\rightarrow$ Site Culturel / Nature**
-   - Objectif pédagogique prioritaire : $\le 20\text{ minutes à pied}$ (avec marge de marche pour groupe scolaire).
-   - Signalement automatique d'un point de vigilance au-delà de 20 minutes (transport urbain ou navette requise).
+Depuis ce dossier, la stack existante se lance avec :
 
-3. **Indicateur « Confiance Voyageur Scolaire » (/100)**
-   - Un score transparent et explicable calculé à partir des données historiques réelles de ponctualité liO (`Data_Hackathon.csv`) :
-     * **Régularité historique du train liO** : jusqu'à 40 points
-     * **Fiabilité & absence de suppressions** : jusqu'à 30 points
-     * **Accessibilité piétonne directe ($\le 20\text{ min}$)** : 15 points
-     * **Capacité groupe adaptée** : 15 points
-
----
-
-## 🐳 Déploiement Conteneurisé Multi-Services avec Docker Compose
-
-L'ensemble de la stack est orchestré via Docker Compose en 3 services coordonnés :
-1. **`model-downloader`** : Télécharge automatiquement le modèle LLM Qwen 2.5 (GGUF quantifié) dans le volume partagé `llm_models` s'il n'est pas déjà en cache.
-2. **`llm`** : Serveur d'inférence llama.cpp CPU (`ghcr.io/ggml-org/llama.cpp:server`) compatible API OpenAI sur le port 8080.
-3. **`backend`** : Serveur FastAPI / Uvicorn avec WhisperAI GGML, base de données SQLite, données liO et frontend de test.
-
-### Démarrage en une seule commande
-
-Depuis la racine du projet ou depuis le dossier `backend_lio_occitanie` :
 ```bash
 docker compose up --build
 ```
 
-- **Frontend de test interactif** (enregistrement micro + test de toutes les routes) : `http://localhost:8000/test`
-  > Le micro n'est autorisé par le navigateur qu'en contexte sécurisé : utilisez bien `localhost` (ou 127.0.0.1).
-- **Documentation OpenAPI / Swagger** : `http://localhost:8000/docs`
-- **Serveur LLM llama.cpp** : `http://localhost:8080/health`
-- **Santé Backend** : `http://localhost:8000/health`
-- **Persistance** :
-  - Base SQLite : `./data/lio.db`
-  - Modèles LLM : volume Docker `llm_models`
-  - Modèle Whisper : téléchargé automatiquement lors du build Docker
+Trois services : téléchargement du modèle Qwen 2.5 GGUF, serveur llama.cpp sur 8080 et FastAPI/Whisper sur 8000. Le compose du dossier backend est la référence pour cette commande. Le frontend Vite se démarre séparément.
 
----
+## Tests
 
-## 🛠️ Démarrage Local (sans Docker)
-
-### 1. Installation des dépendances
 ```bash
-pip install -r requirements.txt
+pip install pytest
+python -m pytest tests -q
 ```
 
-### 2. Importer les hébergements
-```bash
-python scripts/import_accommodations.py --file data/occitanie-hebergements-scolaires.xlsx
-```
-
-### 3. Lancer l'API
-```bash
-uvicorn app.main:app --reload
-```
-
----
-
-## 🧪 Tests Automatisés
-
-Exécuter la suite de tests unitaires et d'intégration :
-```bash
-python tests/test_backend.py
-```
+Les tests de contrats utilisent SQLite isolée ; ils couvrent notamment l’absence de source opérationnelle, l’opt-in historique, les distances inconnues, les dates/effectifs invalides, les clarifications, la validation et l’invalidation des sélections, la persistance des demandes et la liaison des avis. Les modèles réels et le build Docker n’ont pas été exécutés lors de la validation locale.

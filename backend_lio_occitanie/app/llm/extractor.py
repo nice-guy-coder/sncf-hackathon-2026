@@ -154,7 +154,7 @@ def extract_heuristic_fallback(description: str, ref: Optional[date] = None) -> 
 
     # Détection destination
     dest = None
-    m_dest = re.search(r"(?:destination|visiter|aller à|aller a|à destination de|vers|pour)\s+([A-Za-zÀ-ÿ' -]{2,40})", description, re.I)
+    m_dest = re.search(r"(?:à destination de|destination|visiter|(?:pour\s+)?aller à|(?:pour\s+)?aller a|vers|pour)\s+([A-Za-zÀ-ÿ' -]{2,40})", description, re.I)
     if m_dest:
         val = re.split(r",|\.|\s+le\s+|\s+avec\s+|\s+au départ\s+", m_dest.group(1), flags=re.I)[0].strip()
         val = re.sub(r"^(?:la ville de|la gare de)\s*", "", val, flags=re.I).strip()

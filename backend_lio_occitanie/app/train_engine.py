@@ -1,5 +1,6 @@
 import json
 import re
+import unicodedata
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 
@@ -10,11 +11,12 @@ _SCHEDULES: List[Dict[str, Any]] = []
 def _normalize_station_name(name: str) -> str:
     if not name:
         return ""
-    n = name.lower()
+    n = ''.join(c for c in unicodedata.normalize('NFKD', name.lower()) if not unicodedata.combining(c))
     n = re.sub(r"^(gare de|gare d'|gare du|gare des)\s+", "", n)
     n = n.replace("-", " ").replace(" saint ", " st ")
-    n = n.replace("matabiau", "").replace("saint roch", "").replace("ville bourbon", "").replace("ville", "")
-    return n.strip()
+    aliases = {"toulouse matabiau": "toulouse", "montpellier saint roch": "montpellier", "montauban ville bourbon": "montauban"}
+    n = ' '.join(n.split())
+    return aliases.get(n, n)
 
 def get_schedules() -> List[Dict[str, Any]]:
     global _SCHEDULES
@@ -96,6 +98,8 @@ def find_train_options(
     schedules = get_schedules()
     norm_origin = _normalize_station_name(origin)
     norm_dest = _normalize_station_name(destination_station)
+    if not norm_origin or not norm_dest:
+        return []
 
     results = []
     for item in schedules:
@@ -103,7 +107,7 @@ def find_train_options(
         sched_dest = _normalize_station_name(item["destination"])
 
         # Correspondance exacte ou inclusion
-        if norm_origin in sched_orig and norm_dest in sched_dest:
+        if norm_origin == sched_orig and norm_dest == sched_dest:
             dur = item.get("duration_minutes", 60)
             if max_duration_minutes and dur > max_duration_minutes:
                 continue
