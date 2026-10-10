@@ -9,9 +9,13 @@ from sqlalchemy import select, or_
 
 from .db import Base, engine, get_db
 from .models import Accommodation, ProjectSession, ReservationRequest, Feedback
-from .llm import analyze_request
+from .llm import analyze_request, TravelExtractor, LLMClient
 from .train_engine import find_train_options
 from .stt import transcribe_audio_bytes
+
+# Initialisation du client LLM et de l'extracteur de voyage
+llm_client = LLMClient()
+travel_extractor = TravelExtractor(llm_client)
 
 TEST_FRONTEND = Path(__file__).resolve().parent.parent / "test_frontend" / "index.html"
 
@@ -121,95 +125,52 @@ def analyze_trip(body: TripAnalyzeIn, db: Session = Depends(get_db)):
         "next_step": "destinations_search" if not analysis.get("missing_fields") else "clarification"
     }
 
-@app.post("/api/trips/analyze-audio", summary="Analyse d'un enregistrement vocal via WhisperAI")
-async def analyze_trip_audio(
-    file: UploadFile = File(..., description="Fichier audio enregistré (WAV, WebM, MP3, OGG)"),
-    session_id: Optional[str] = Form(None),
-    db: Session = Depends(get_db)
-):
-    """
-    Reçoit le fichier audio envoyé par le navigateur, le transcrit localement avec WhisperAI,
-    puis enchaîne directement l'analyse pédagogique et ferroviaire.
-    """
-    audio_bytes = await file.read()
-    if not audio_bytes:
-        raise HTTPException(400, detail="Fichier audio vide.")
-
-    try:
-        transcription = transcribe_audio_bytes(audio_bytes, filename=file.filename or "audio.wav")
-    except Exception as exc:
-        raise HTTPException(500, detail=f"Erreur lors de la transcription Whisper : {str(exc)}")
-
-    if not transcription:
-        return {
-            "session_id": session_id,
-            "status": "needs_clarification",
-            "input_mode": "speech_to_text",
-            "transcribed_text": "",
-            "warning": "Aucune parole détectée dans l'enregistrement.",
-            "next_step": "clarification"
-        }
-
-    # Analyse du texte transcrit
-    analysis = analyze_request(transcription)
-
-    if session_id:
-        session_obj = db.get(ProjectSession, session_id)
-        if not session_obj:
-            raise HTTPException(404, detail="Session non trouvée")
-        session_obj.original_request = transcription
-        session_obj.input_mode = "speech_to_text"
-    else:
-        session_obj = ProjectSession(
-            original_request=transcription,
-            input_mode="speech_to_text"
-        )
-        db.add(session_obj)
-
-    session_obj.structured_request = analysis
-    session_obj.departure_station_text = analysis.get("departure_station_text")
-    session_obj.departure_date = analysis.get("departure_date")
-    session_obj.class_level = analysis.get("class_level")
-    session_obj.student_count = analysis.get("student_count")
-    session_obj.supervisor_count = analysis.get("supervisor_count")
-    session_obj.destination_text = analysis.get("destination_text")
-    session_obj.status = "needs_clarification" if analysis.get("missing_fields") else "ready_for_destinations"
-
-    db.commit()
-    db.refresh(session_obj)
-
-    return {
-        "session_id": session_obj.id,
-        "status": session_obj.status,
-        "input_mode": "speech_to_text",
-        "transcribed_text": transcription,
-        "extracted_data": analysis,
-        "next_step": "destinations_search" if not analysis.get("missing_fields") else "clarification"
-    }
-
-@app.post("/api/analyzeVoice", summary="Transcription d'un fichier audio en texte (Whisper local)")
+@app.post("/api/analyzeVoice", summary="Analyse audio : WhisperAI local (audio -> texte) puis LLM local (texte -> catégories JSON)")
 def analyze_voice(
-    file: UploadFile = File(..., description="Fichier audio (WAV, WebM, OGG, MP3...)"),
+    file: UploadFile = File(..., description="Fichier audio enregistré (WAV, WebM, MP3, OGG...)"),
     language: str = Form("fr", description="Code langue Whisper (fr, en...)"),
 ):
     """
-    Reçoit un fichier audio, le transmet au modèle Whisper local et renvoie le texte transcrit.
-    Route synchrone : FastAPI l'exécute dans un thread, l'inférence ne bloque donc pas le serveur.
+    1. Reçoit le fichier audio en entrée.
+    2. Le transmet au modèle local WhisperAI pour obtenir la retranscription en texte.
+    3. Transmet la retranscription obtenue en entrée au LLM local (TravelExtractor).
+    4. Retourne les catégories obtenues au format JSON (avec null si un élément n'est pas renseigné).
     """
     audio_bytes = file.file.read()
     if not audio_bytes:
         raise HTTPException(400, detail="Fichier audio vide.")
+
     try:
-        text = transcribe_audio_bytes(audio_bytes, filename=file.filename or "audio.wav", language=language)
+        transcription = transcribe_audio_bytes(audio_bytes, filename=file.filename or "audio.wav", language=language)
     except FileNotFoundError as exc:
         raise HTTPException(503, detail=str(exc))
     except Exception as exc:
-        raise HTTPException(500, detail=f"Erreur de transcription : {exc}")
+        raise HTTPException(500, detail=f"Erreur de transcription audio : {exc}")
+
+    if not transcription:
+        return {
+            "transcription": "",
+            "nombre_personnes": None,
+            "date_depart": None,
+            "date_arrivee": None,
+            "lieu_depart": None,
+            "destination": None,
+            "destination_connue": False,
+            "speech_detected": False,
+        }
+
+    # Appel au modèle LLM local pour classifier et extraire les catégories en JSON
+    travel_info = travel_extractor.extract(transcription)
+
     return {
-        "text": text,
-        "filename": file.filename,
-        "language": language,
-        "speech_detected": bool(text),
+        "transcription": transcription,
+        "nombre_personnes": travel_info.nombre_personnes,
+        "date_depart": travel_info.date_depart,
+        "date_arrivee": travel_info.date_arrivee,
+        "lieu_depart": travel_info.lieu_depart,
+        "destination": travel_info.destination,
+        "destination_connue": travel_info.destination_connue,
+        "speech_detected": True,
     }
 
 

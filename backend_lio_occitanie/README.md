@@ -5,20 +5,35 @@
 
 ---
 
-## 🚀 Architecture Simplifiée & Speech-to-Text Whisper
+## 🚀 Architecture Intégrée : WhisperAI + LLM Local + Backend liO
 
-Conformément à la spécification fonctionnelle et au schéma d'architecture, l'API est organisée autour de **endpoints métier directs** supportant la saisie écrite et l'entrée vocale via **WhisperAI local** :
+Conformément à la spécification fonctionnelle et à l'architecture cible, l'API orchestre la chaîne complète d'acquisition vocale, de compréhension du langage naturel (LLM local) et de recherche ferroviaire :
 
 ```http
-POST /api/trips/analyze-audio  -> Analyse directe d'un enregistrement vocal (WAV, WebM, MP3) via WhisperAI
-POST /api/analyzeVoice         -> Transcription d'un fichier audio en texte via Whisper local
-POST /api/trips/analyze        -> Analyse de la demande en texte libre (ou transcription)
-POST /api/destinations/search  -> Suggestions de sites & hébergements liO en Occitanie
+POST /api/analyzeVoice         -> Audio (micro) -> Whisper local -> LLM local (Qwen2.5) -> JSON structuré
+POST /api/trips/analyze        -> Analyse de projet pédagogique en texte libre (thèmes, effectifs, dates)
+POST /api/destinations/search  -> Suggestions de sites & hébergements scolaires liO en Occitanie
 POST /api/trains/search        -> Horaires liO réels, Jauge groupe (50 pax) & Indice Confiance (/100)
-POST /api/trips/summary        -> Récapitulatif global du voyage
+POST /api/trips/summary        -> Récapitulatif global du projet de voyage
 POST /api/prereservations      -> Demande de pré-réservation (référence dossier + statut pending)
 POST /api/feedback             -> Retour d'expérience après sortie pour nourrir l'indicateur
 ```
+
+### Route vocale `/api/analyzeVoice`
+1. Reçoit le flux audio (WAV, WebM, MP3, OGG...).
+2. Transcrit l'audio via **WhisperAI** local (`ggml-base-q5_1`).
+3. Envoie la transcription en entrée au **LLM local** (Qwen 2.5 Instruct via serveur llama.cpp).
+4. Retourne les catégories extraites en JSON :
+   - `transcription` (texte brut retranscrit)
+   - `nombre_personnes` (int ou `null`)
+   - `date_depart` (format ISO `YYYY-MM-DD` ou `null`)
+   - `date_arrivee` (format ISO `YYYY-MM-DD` ou `null`)
+   - `lieu_depart` (str ou `null`)
+   - `destination` (str ou `null`)
+   - `destination_connue` (bool)
+   - `speech_detected` (bool)
+
+> **Résilience & Fallback** : Si le serveur LLM est indisponible ou non démarré, le backend bascule automatiquement sur l'extracteur heuristique sans interrompre le service.
 
 ---
 
@@ -43,27 +58,29 @@ POST /api/feedback             -> Retour d'expérience après sortie pour nourri
 
 ---
 
-## 🐳 Déploiement Conteneurisé avec Docker
+## 🐳 Déploiement Conteneurisé Multi-Services avec Docker Compose
 
-L'ensemble de la stack (serveur FastAPI/Uvicorn, base de données SQLite, modèle WhisperAI GGML et données liO) est entièrement conteneurisé.
+L'ensemble de la stack est orchestré via Docker Compose en 3 services coordonnés :
+1. **`model-downloader`** : Télécharge automatiquement le modèle LLM Qwen 2.5 (GGUF quantifié) dans le volume partagé `llm_models` s'il n'est pas déjà en cache.
+2. **`llm`** : Serveur d'inférence llama.cpp CPU (`ghcr.io/ggml-org/llama.cpp:server`) compatible API OpenAI sur le port 8080.
+3. **`backend`** : Serveur FastAPI / Uvicorn avec WhisperAI GGML, base de données SQLite, données liO et frontend de test.
 
 ### Démarrage en une seule commande
 
-Depuis la racine du projet :
+Depuis la racine du projet ou depuis le dossier `backend_lio_occitanie` :
 ```bash
 docker compose up --build
 ```
 
-Ou depuis le dossier `backend_lio_occitanie` :
-```bash
-docker compose up -d --build
-```
-
-- **API & Swagger Docs** : `http://localhost:8000/docs`
-- **Frontend de test** (toutes les routes + enregistrement micro) : `http://localhost:8000/test`
-  > Le micro n'est autorisé par le navigateur qu'en contexte sécurisé : utilisez bien `localhost` (pas l'IP de la machine).
-- **Santé / Healthcheck** : `http://localhost:8000/health`
-- **Persistance** : la base SQLite est persistée dans le volume `./data/lio.db`.
+- **Frontend de test interactif** (enregistrement micro + test de toutes les routes) : `http://localhost:8000/test`
+  > Le micro n'est autorisé par le navigateur qu'en contexte sécurisé : utilisez bien `localhost` (ou 127.0.0.1).
+- **Documentation OpenAPI / Swagger** : `http://localhost:8000/docs`
+- **Serveur LLM llama.cpp** : `http://localhost:8080/health`
+- **Santé Backend** : `http://localhost:8000/health`
+- **Persistance** :
+  - Base SQLite : `./data/lio.db`
+  - Modèles LLM : volume Docker `llm_models`
+  - Modèle Whisper : téléchargé automatiquement lors du build Docker
 
 ---
 

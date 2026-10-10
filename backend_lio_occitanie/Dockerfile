@@ -7,6 +7,7 @@ ENV PYTHONUNBUFFERED=1 \
     DATABASE_URL=sqlite:////app/data/lio.db \
     WHISPER_MODEL_PATH=/app/models/ggml-base-q5_1.bin \
     WHISPER_THREADS=4 \
+    LLM_BASE_URL=http://llm:8080 \
     PORT=8000
 
 # Installation des dépendances système nécessaires :

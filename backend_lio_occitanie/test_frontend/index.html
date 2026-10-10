@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Test frontend — API liO Occitanie</title>
+<title>Test frontend — API liO Occitanie (Whisper & LLM)</title>
 <style>
   :root { --bg:#f5f6f8; --card:#fff; --border:#d9dde3; --accent:#0b5cad; --ok:#1e7d32; --err:#b3261e; }
   * { box-sizing: border-box; }
@@ -21,21 +21,28 @@
   input, textarea, select { width:100%; padding:6px 8px; border:1px solid var(--border); border-radius:4px; font:inherit; font-size:13px; }
   textarea { min-height:70px; resize:vertical; }
   .row { display:flex; gap:8px; } .row > div { flex:1; }
-  button { margin-top:10px; padding:7px 14px; border:0; border-radius:4px; background:var(--accent); color:#fff; cursor:pointer; font-size:13px; }
+  button { margin-top:10px; padding:7px 14px; border:0; border-radius:4px; background:var(--accent); color:#fff; cursor:pointer; font-size:13px; font-weight:500; }
   button:disabled { opacity:.45; cursor:not-allowed; }
   button.rec { background:var(--err); }
   pre { background:#0f1720; color:#d6e2ee; padding:10px; border-radius:4px; font-size:12px; max-height:320px; overflow:auto; white-space:pre-wrap; word-break:break-word; margin:10px 0 0; }
   .status { font-size:12px; margin-top:8px; font-weight:600; }
   .status.ok { color:var(--ok); } .status.err { color:var(--err); }
   .wide { grid-column:1 / -1; }
-  .transcript { font-size:15px; padding:10px; background:#eef4fb; border-radius:4px; margin-top:10px; min-height:22px; }
+  .transcript-box { background:#eef4fb; border:1px solid #c7dcf5; border-radius:6px; padding:10px; margin-top:10px; }
+  .transcript-title { font-size:11px; text-transform:uppercase; color:#0b5cad; font-weight:bold; margin-bottom:4px; }
+  .transcript { font-size:14px; min-height:20px; color:#111; }
+  .categories-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px; margin-top:10px; }
+  .cat-card { background:#fff; border:1px solid #d0d7de; border-radius:4px; padding:8px; }
+  .cat-label { font-size:11px; color:#666; }
+  .cat-val { font-size:13px; font-weight:600; font-family:monospace; color:#0b5cad; }
+  .cat-val.null { color:#888; font-style:italic; font-weight:normal; }
   audio { width:100%; margin-top:10px; }
 </style>
 </head>
 <body>
 <header>
   <h1>🚆 Test frontend — API liO Occitanie</h1>
-  <label>session_id courant (rempli automatiquement après une analyse)
+  <label>session_id courant
     <input id="sessionId" placeholder="aucune session">
   </label>
   <a href="/docs" style="color:#fff;font-size:13px">Swagger /docs ↗</a>
@@ -43,24 +50,38 @@
 
 <main>
 
-<!-- ============ Enregistrement vocal ============ -->
+<!-- ============ Enregistrement vocal + LLM ============ -->
 <section class="wide">
-  <h2>🎙️ Voix → Whisper</h2>
-  <div class="route"><b>POST</b> /api/analyzeVoice (transcription seule) &nbsp;·&nbsp; <b>POST</b> /api/trips/analyze-audio (transcription + analyse + session)</div>
+  <h2>🎙️ Analyse Vocale → WhisperAI & LLM local</h2>
+  <div class="route"><b>POST</b> /api/analyzeVoice : fichier audio &rarr; transcription Whisper &rarr; catégorisation LLM JSON</div>
   <div class="row">
     <div>
       <button id="recBtn">● Démarrer l'enregistrement</button>
       <span id="recTimer" style="font-family:monospace;margin-left:8px"></span>
-      <label>…ou choisir un fichier audio existant</label>
+      <label>…ou choisir un fichier audio existant (WAV, MP3, WebM)</label>
       <input type="file" id="audioFile" accept="audio/*">
       <audio id="audioPreview" controls hidden></audio>
     </div>
     <div>
-      <label>Langue (analyzeVoice)</label>
+      <label>Langue audio</label>
       <select id="voiceLang"><option value="fr">fr</option><option value="en">en</option><option value="es">es</option><option value="de">de</option></select>
-      <button id="sendVoice" disabled>Envoyer → /api/analyzeVoice</button>
-      <button id="sendAnalyzeAudio" disabled>Envoyer → /api/trips/analyze-audio</button>
-      <div class="transcript" id="transcript"></div>
+      <button id="sendVoice" disabled>Envoyer l'audio → /api/analyzeVoice</button>
+      
+      <div class="transcript-box">
+        <div class="transcript-title">1. Retranscription audio (Whisper) :</div>
+        <div class="transcript" id="transcript"><i>En attente d'un enregistrement…</i></div>
+      </div>
+
+      <div class="transcript-box" style="margin-top:8px;background:#fbfbfb;border-color:#ddd;">
+        <div class="transcript-title" style="color:#333;">2. Catégories extraites par le LLM local (JSON) :</div>
+        <div class="categories-grid" id="catGrid">
+          <div class="cat-card"><div class="cat-label">nombre_personnes</div><div class="cat-val null" id="valPax">null</div></div>
+          <div class="cat-card"><div class="cat-label">date_depart</div><div class="cat-val null" id="valDateDep">null</div></div>
+          <div class="cat-card"><div class="cat-label">date_arrivee</div><div class="cat-val null" id="valDateArr">null</div></div>
+          <div class="cat-card"><div class="cat-label">lieu_depart</div><div class="cat-val null" id="valDep">null</div></div>
+          <div class="cat-card"><div class="cat-label">destination</div><div class="cat-val null" id="valDest">null</div></div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="status" id="voiceStatus"></div>
@@ -177,6 +198,17 @@ const optStr = (id) => val(id) || null;
 const optInt = (id) => (val(id) === "" ? null : Number(val(id)));
 const session = () => optStr("sessionId");
 
+function setCardVal(elId, val) {
+  const el = $(elId);
+  if (val === null || val === undefined || val === "") {
+    el.textContent = "null";
+    el.className = "cat-val null";
+  } else {
+    el.textContent = String(val);
+    el.className = "cat-val";
+  }
+}
+
 /** Appelle l'API et affiche statut, durée et réponse JSON dans le panneau donné. */
 async function callApi(method, path, body, prefix) {
   const statusEl = $(prefix + "Status"), outEl = $(prefix + "Out");
@@ -253,7 +285,6 @@ $("acBtn").onclick = () => {
 let recorder = null, chunks = [], audioBlob = null, audioName = null, timerId = null;
 
 function pickMimeType() {
-  // Le backend convertit tout via ffmpeg : on prend simplement le premier format supporté par le navigateur.
   for (const t of ["audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus", "audio/mp4"])
     if (window.MediaRecorder && MediaRecorder.isTypeSupported(t)) return t;
   return "";
@@ -263,7 +294,7 @@ const extFor = (mime) => mime.includes("ogg") ? "ogg" : mime.includes("mp4") ? "
 function setAudio(blob, name) {
   audioBlob = blob; audioName = name;
   $("audioPreview").src = URL.createObjectURL(blob); $("audioPreview").hidden = false;
-  $("sendVoice").disabled = $("sendAnalyzeAudio").disabled = false;
+  $("sendVoice").disabled = false;
 }
 
 $("recBtn").onclick = async () => {
@@ -302,21 +333,33 @@ $("sendVoice").onclick = async () => {
   const fd = new FormData();
   fd.append("file", audioBlob, audioName);
   fd.append("language", val("voiceLang"));
-  $("transcript").textContent = "…";
-  const data = await callApi("POST", "/api/analyzeVoice", fd, "voice");
-  $("transcript").textContent = data ? (data.text || "(aucune parole détectée)") : "";
-  if (data?.text) $("anContent").value = data.text;   // pratique : réinjecte la transcription dans l'analyse texte
-};
+  $("transcript").textContent = "Transcription Whisper en cours…";
+  setCardVal("valPax", null);
+  setCardVal("valDateDep", null);
+  setCardVal("valDateArr", null);
+  setCardVal("valDep", null);
+  setCardVal("valDest", null);
 
-$("sendAnalyzeAudio").onclick = async () => {
-  const fd = new FormData();
-  fd.append("file", audioBlob, audioName);
-  if (session()) fd.append("session_id", session());
-  $("transcript").textContent = "…";
-  const data = await callApi("POST", "/api/trips/analyze-audio", fd, "voice");
-  $("transcript").textContent = data ? (data.transcribed_text || "(aucune parole détectée)") : "";
+  const data = await callApi("POST", "/api/analyzeVoice", fd, "voice");
+
+  if (data) {
+    $("transcript").textContent = data.transcription || "(aucune parole détectée)";
+    setCardVal("valPax", data.nombre_personnes);
+    setCardVal("valDateDep", data.date_depart);
+    setCardVal("valDateArr", data.date_arrivee);
+    setCardVal("valDep", data.lieu_depart);
+    setCardVal("valDest", data.destination);
+
+    // Pré-remplissage automatique des formulaires suivants
+    if (data.transcription) $("anContent").value = data.transcription;
+    if (data.lieu_depart) $("trFrom").value = data.lieu_depart;
+    if (data.destination) $("trTo").value = data.destination;
+    if (data.date_depart) $("trDate").value = data.date_depart;
+    if (data.nombre_personnes) $("trPax").value = data.nombre_personnes;
+  } else {
+    $("transcript").textContent = "(erreur d'analyse)";
+  }
 };
 </script>
 </body>
 </html>
-

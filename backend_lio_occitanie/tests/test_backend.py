@@ -4,7 +4,8 @@ from pathlib import Path
 # Ajouter backend au PYTHONPATH
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.llm import analyze_request
+from app.llm import analyze_request, TravelExtractor, TravelInfo
+from app.llm.extractor import extract_heuristic_fallback
 from app.train_engine import find_train_options, calculate_confidence_score
 from app.stt import get_model_path, MODELS_DIR
 
@@ -104,10 +105,46 @@ def test_whisper_model_configuration():
     except ImportError:
         pass # Numpy sera exécuté dans le conteneur Docker
 
+def test_travel_extractor_mock():
+    """Vérifie l'extraction via mock LLM et post-processing."""
+    class MockLLM:
+        def extract_raw(self, description: str):
+            return {
+                "nombre_personnes": 30,
+                "date_depart": "2026-11-15",
+                "date_arrivee": None,
+                "lieu_depart": "Toulouse",
+                "destination": "Carcassonne",
+            }
+
+    extractor = TravelExtractor(MockLLM())
+    res = extractor.extract("Nous partons de Toulouse pour aller à Carcassonne le 2026-11-15 avec 30 élèves.")
+    assert res.nombre_personnes == 30
+    assert res.lieu_depart == "Toulouse"
+    assert res.destination == "Carcassonne"
+    assert res.destination_connue is True
+    assert res.date_depart == "2026-11-15"
+
+def test_travel_extractor_heuristic_fallback():
+    """Vérifie que la bascule automatique sur l'heuristique fonctionne si le serveur LLM échoue."""
+    class FailingLLM:
+        def extract_raw(self, description: str):
+            raise ConnectionError("Serveur llama.cpp injoignable")
+
+    extractor = TravelExtractor(FailingLLM())
+    res = extractor.extract("Nous sommes 40 élèves au départ de Foix pour aller à Carcassonne le 2026-11-15.")
+    assert res.nombre_personnes == 40
+    assert res.lieu_depart == "Foix"
+    assert res.destination == "Carcassonne"
+    assert res.destination_connue is True
+    assert res.date_depart == "2026-11-15"
+
 if __name__ == "__main__":
     test_analyze_request_cadrage_example()
     test_analyze_request_missing_info()
     test_train_engine_search_and_jauge()
     test_confidence_score_calculation()
     test_whisper_model_configuration()
+    test_travel_extractor_mock()
+    test_travel_extractor_heuristic_fallback()
     print("Tous les tests passent avec succès !")

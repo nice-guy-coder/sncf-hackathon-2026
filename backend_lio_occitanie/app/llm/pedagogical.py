@@ -1,3 +1,4 @@
+"""Analyse pédagogique et ferroviaire spécifique aux sorties scolaires liO Occitanie."""
 import re
 
 THEMES = {
@@ -29,6 +30,7 @@ KNOWN_CITIES = [
     "castelnaudary", "cahors", "auch", "montauban", "agde", "sete", "sète"
 ]
 
+
 def analyze_request(text: str) -> dict:
     low = text.lower()
     result = {
@@ -53,7 +55,7 @@ def analyze_request(text: str) -> dict:
         if any(w in low for w in keywords):
             result["themes"].append(theme)
 
-    # 2. Niveau de classe (ex: 5e, 6ème, CM2, CE1, seconde, terminale, collège, lycée)
+    # 2. Niveau de classe
     m_class = re.search(r"\b(classe de\s+)?(\d{1,2}(?:e|ème|eme)|cm1|cm2|ce1|ce2|cp|seconde|première|terminale|collège|lycée)\b", low)
     if m_class:
         result["class_level"] = m_class.group(2).strip()
@@ -74,33 +76,30 @@ def analyze_request(text: str) -> dict:
     if students or supervisors:
         result["total_participants"] = students + supervisors
 
-    # 5. Date précise (format YYYY-MM-DD ou date textuelle)
+    # 5. Date
     m_date = re.search(r"\b(20\d{2}-\d{2}-\d{2})\b", text)
     if m_date:
         result["departure_date"] = m_date.group(1)
     else:
-        # Date au format JJ/MM/AAAA
         m_date_fr = re.search(r"\b(\d{1,2})[/.-](\d{1,2})[/.-](20\d{2})\b", text)
         if m_date_fr:
             result["departure_date"] = f"{m_date_fr.group(3)}-{int(m_date_fr.group(2)):02d}-{int(m_date_fr.group(1)):02d}"
 
-    # 6. Gare ou ville de départ (gestion de "collège de Foix", "au départ de...", "gare de Toulouse", etc.)
+    # 6. Gare ou ville de départ
     m_dep = re.search(r"(?:au départ de|depart de|depuis|partons du collège de|partons du lycée de|partons de|partant de|gare de)\s+([A-Za-zÀ-ÿ' -]{2,60})", text, re.I)
     if m_dep:
         raw_dep = re.split(r",|\.|\s+le\s+|\s+pour\s+|\s+avec\s+|\s+en\s+", m_dep.group(1), flags=re.I)[0].strip()
-        # Nettoyer "collège de", "lycée de"
         cleaned_dep = re.sub(r"^(?:collège de|college de|lycée de|lycee de|gare de|gare d')\s*", "", raw_dep, flags=re.I).strip()
         if cleaned_dep:
             result["departure_station_text"] = cleaned_dep.capitalize()
 
-    # Si pas trouvé par regex préposition, vérifier la présence directe de villes connues
     if not result["departure_station_text"]:
         for city in KNOWN_CITIES:
             if re.search(rf"\b(à|a|de)\s+{city}\b", low):
                 result["departure_station_text"] = city.capitalize()
                 break
 
-    # 7. Destination (si déjà connue de l'enseignant)
+    # 7. Destination
     m_dest = re.search(r"(?:destination|visiter|aller à|aller a|à destination de|vers)\s+([A-Za-zÀ-ÿ' -]{2,60})", text, re.I)
     if m_dest:
         raw_dest = re.split(r",|\.|\s+le\s+|\s+pour\s+|\s+avec\s+|\s+en\s+", m_dest.group(1), flags=re.I)[0].strip()
@@ -110,16 +109,15 @@ def analyze_request(text: str) -> dict:
             result["destination_known"] = True
             result["intent"] = "known_destination"
 
-    # 8. Contrainte de temps de train max (ex: moins de 60 min)
+    # 8. Contrainte de temps de train max
     m_max = re.search(r"(?:moins de|maximum|max\.?)\s+(\d{1,3})\s*(?:minutes|min|h|heures)", low)
     if m_max:
         val = int(m_max.group(1))
-        # convertir si exprimé en heures
         if "h" in m_max.group(0):
             val *= 60
         result["max_train_minutes"] = val
 
-    # 9. Champs manquants et question de clarification
+    # 9. Champs manquants
     if not result["departure_station_text"]:
         result["missing_fields"].append("departure_station")
     if not result["departure_date"]:
