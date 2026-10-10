@@ -43,7 +43,6 @@ COPY app/ ./app/
 COPY scripts/ ./scripts/
 COPY data/ ./data/
 COPY models/ ./models/
-COPY test_frontend/ ./test_frontend/
 COPY entrypoint.sh ./entrypoint.sh
 
 # Rendre l'entrypoint exécutable
