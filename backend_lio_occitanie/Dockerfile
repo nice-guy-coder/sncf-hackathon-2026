@@ -13,7 +13,7 @@ ENV PYTHONUNBUFFERED=1 \
 # - build-essential & cmake : compilation C++ de pywhispercpp / whisper.cpp
 # - ffmpeg : conversion universelle des flux audio (WebM, OGG, MP3 vers WAV 16kHz)
 # - libsndfile1 : décodage audio
-# - curl : pour le healthcheck Docker
+# - curl : pour le téléchargement du modèle et le healthcheck Docker
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
@@ -30,7 +30,14 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Copie du code applicatif, des données et des modèles Whisper quantifiés
+# Téléchargement automatique du modèle Whisper quantifié (ggml-base-q5_1.bin)
+# Permet une initialisation 100% autonome du conteneur sans fichiers binaires locaux
+RUN mkdir -p /app/models && \
+    echo "Téléchargement du modèle Whisper Base (GGML Q5_1)..." && \
+    curl -L -f -o /app/models/ggml-base-q5_1.bin \
+    "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base-q5_1.bin"
+
+# Copie du code applicatif, des données et des scripts
 COPY app/ ./app/
 COPY scripts/ ./scripts/
 COPY data/ ./data/

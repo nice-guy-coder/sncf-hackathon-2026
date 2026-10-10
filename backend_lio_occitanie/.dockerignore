@@ -9,3 +9,5 @@ __pycache__/
 .git/
 .gitignore
 tests/
+models/*.bin
+*.bin

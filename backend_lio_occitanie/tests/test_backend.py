@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.llm import analyze_request
 from app.train_engine import find_train_options, calculate_confidence_score
-from app.stt import get_model_path
+from app.stt import get_model_path, MODELS_DIR
 
 def test_analyze_request_cadrage_example():
     """Teste l'exemple exact de la fiche de cadrage SNCF."""
@@ -85,11 +85,14 @@ def test_confidence_score_calculation():
     assert score_bad["score"] < score_ok["score"]
     assert score_bad["details"]["capacity_pts"] == 0.0
 
-def test_whisper_model_path():
-    """Vérifie la détection du modèle Whisper GGML quantifié."""
+def test_whisper_model_configuration():
+    """Vérifie la configuration du modèle Whisper et le manifest HuggingFace."""
     model_p = get_model_path()
-    assert model_p.exists()
     assert "ggml" in model_p.name
+
+    # Vérifier la présence du manifest
+    manifest = MODELS_DIR / "manifest.json"
+    assert manifest.exists()
 
     try:
         import numpy as np
@@ -106,5 +109,5 @@ if __name__ == "__main__":
     test_analyze_request_missing_info()
     test_train_engine_search_and_jauge()
     test_confidence_score_calculation()
-    test_whisper_model_path()
+    test_whisper_model_configuration()
     print("Tous les tests passent avec succès !")

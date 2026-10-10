@@ -15,12 +15,20 @@ if [ -f "$EXCEL_PATH" ]; then
     python scripts/import_accommodations.py --file "$EXCEL_PATH" || true
 fi
 
-# 2. Vérification des modèles Whisper
+# 2. Vérification et téléchargement de secours du modèle Whisper
 MODEL_PATH="${WHISPER_MODEL_PATH:-/app/models/ggml-base-q5_1.bin}"
+if [ ! -f "$MODEL_PATH" ]; then
+    echo "Modèle Whisper absent à $MODEL_PATH. Téléchargement en cours..."
+    mkdir -p "$(dirname "$MODEL_PATH")"
+    curl -L -f -o "$MODEL_PATH" "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base-q5_1.bin" || {
+        echo "⚠️ Échec du téléchargement automatique du modèle Whisper."
+    }
+fi
+
 if [ -f "$MODEL_PATH" ]; then
-    echo "Modèle WhisperAI détecté : $MODEL_PATH ($(du -h "$MODEL_PATH" | cut -f1))"
+    echo "Modèle WhisperAI prêt : $MODEL_PATH ($(du -h "$MODEL_PATH" | cut -f1))"
 else
-    echo "⚠️ Avertissement : modèle Whisper introuvable à $MODEL_PATH. Vérifiez le volume /app/models."
+    echo "⚠️ Avertissement : modèle Whisper introuvable. Les fonctionnalités STT seront en mode dégradé."
 fi
 
 # 3. Lancement du serveur uvicorn

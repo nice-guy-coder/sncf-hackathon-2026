@@ -148,3 +148,4 @@ def transcribe_audio_bytes(audio_bytes: bytes, filename: str = "audio.wav", lang
     finally:
         if tmp_path.exists():
             tmp_path.unlink()
+
