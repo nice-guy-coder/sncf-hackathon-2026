@@ -520,3 +520,4 @@ def compare_itineraries(
             for i in rows
         ]
     }
+
