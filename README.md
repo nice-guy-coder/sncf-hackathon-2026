@@ -1,3 +1,10 @@
+# AUTEURS DU PROJET
+Matthias LOUBET
+Narayan BHATTARAI
+Sujan Man MANANDHAR
+Madxence SEJEAN
+Ciça COTRIM
+
 # Copilote de sorties scolaires en train liO — Occitanie
 
 Frontend React/TypeScript/Vite et backend FastAPI. Le parcours couvre la description du projet (texte, voix, formulaire), les attractions touristiques, la recherche historique aller/retour, le récapitulatif, la demande locale et le feedback.
