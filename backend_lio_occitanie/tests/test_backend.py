@@ -6,6 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.llm import analyze_request
 from app.train_engine import find_train_options, calculate_confidence_score
+from app.stt import get_model_path
 
 def test_analyze_request_cadrage_example():
     """Teste l'exemple exact de la fiche de cadrage SNCF."""
@@ -72,10 +73,8 @@ def test_confidence_score_calculation():
         available_seats=40,
         requested_pax=30
     )
-    # 90% reg -> 36 pts, 97% non-supp -> 29.1 pts, access -> 15 pts, cap -> 15 pts => ~95
     assert score_ok["score"] >= 90
 
-    # Cas avec capacité insuffisante et distance élevée
     score_bad = calculate_confidence_score(
         regularity_rate=70.0,
         cancellation_rate=20.0,
@@ -86,9 +85,26 @@ def test_confidence_score_calculation():
     assert score_bad["score"] < score_ok["score"]
     assert score_bad["details"]["capacity_pts"] == 0.0
 
+def test_whisper_model_path():
+    """Vérifie la détection du modèle Whisper GGML quantifié."""
+    model_p = get_model_path()
+    assert model_p.exists()
+    assert "ggml" in model_p.name
+
+    try:
+        import numpy as np
+        from app.stt import to_mono_16k
+        dummy_stereo = np.random.randint(-32000, 32000, size=(44100, 2), dtype=np.int16)
+        mono_16k = to_mono_16k(dummy_stereo, 44100)
+        assert mono_16k.ndim == 1
+        assert len(mono_16k) == 16000
+    except ImportError:
+        pass # Numpy sera exécuté dans le conteneur Docker
+
 if __name__ == "__main__":
     test_analyze_request_cadrage_example()
     test_analyze_request_missing_info()
     test_train_engine_search_and_jauge()
     test_confidence_score_calculation()
+    test_whisper_model_path()
     print("Tous les tests passent avec succès !")

@@ -1,0 +1,21 @@
+services:
+  backend:
+    build:
+      context: ./backend_lio_occitanie
+      dockerfile: Dockerfile
+    container_name: lio_backend_api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:////app/data/lio.db
+      - WHISPER_MODEL_PATH=/app/models/ggml-base-q5_1.bin
+      - WHISPER_THREADS=4
+    volumes:
+      - ./backend_lio_occitanie/data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

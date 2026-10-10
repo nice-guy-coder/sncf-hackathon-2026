@@ -151,3 +151,4 @@ def find_train_options(
     # Trier par heure de départ
     results.sort(key=lambda x: x["departure_time"])
     return results
+

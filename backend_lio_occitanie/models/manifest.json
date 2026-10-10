@@ -1,0 +1,32 @@
+{
+  "repository": "ggerganov/whisper.cpp",
+  "revision": "5359861c739e955e79d9a303bcbc70fb988958b1",
+  "checked_on": "2026-10-10",
+  "license": "MIT",
+  "native_debian13_amd64": [
+    {
+      "name": "libjack-jackd2-0.deb",
+      "url": "https://deb.debian.org/debian/pool/main/j/jackd2/libjack-jackd2-0_1.9.22%7edfsg-4_amd64.deb",
+      "sha256": "64ec8d64ae0149bfa17b43d414cc8ae9032a27f76123864d185b275681666c45"
+    },
+    {
+      "name": "libportaudio2.deb",
+      "url": "https://deb.debian.org/debian/pool/main/p/portaudio19/libportaudio2_19.6.0-1.2%2bb3_amd64.deb",
+      "sha256": "e254c833aadd342807898e53f6c587910b68aa0cefea05c3ae8e2d504fa7df6d"
+    }
+  ],
+  "models": {
+    "tiny": {
+      "name": "Whisper Tiny multilingue Q5_1",
+      "file": "models/ggml-tiny-q5_1.bin",
+      "url": "https://huggingface.co/ggerganov/whisper.cpp/resolve/5359861c739e955e79d9a303bcbc70fb988958b1/ggml-tiny-q5_1.bin",
+      "sha256": "818710568da3ca15689e31a743197b520007872ff9576237bda97bd1b469c3d7"
+    },
+    "base": {
+      "name": "Whisper Base multilingue Q5_1",
+      "file": "models/ggml-base-q5_1.bin",
+      "url": "https://huggingface.co/ggerganov/whisper.cpp/resolve/5359861c739e955e79d9a303bcbc70fb988958b1/ggml-base-q5_1.bin",
+      "sha256": "422f1ae452ade6f30a004d7e5c6a43195e4433bc370bf23fac9cc591f01a8898"
+    }
+  }
+}
