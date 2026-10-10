@@ -13,7 +13,7 @@ SYSTEM_PROMPT = """Tu es un extracteur d'informations de voyage. On te donne une
 Tu réponds UNIQUEMENT avec un objet JSON contenant ces clés :
 - "nombre_personnes" : nombre TOTAL de voyageurs (entier). "je" seul = 1 ; "ma femme et moi" = 2 ; "nous" sans précision = null.
 - "date_depart" : expression de la date de départ, recopiée telle qu'écrite dans le texte (ex. "le 12 juillet", "demain", "vendredi prochain").
-- "date_arrivee" : expression de la date d'arrivée ou de retour, recopiée telle qu'écrite.
+- "date_retour" : expression de la date de retour, recopiée telle qu'écrite.
 - "lieu_depart" : ville ou gare de départ.
 - "destination" : ville, pays ou lieu de destination précis.
 Règles strictes :
@@ -24,22 +24,22 @@ Règles strictes :
 FEW_SHOTS: list[tuple[str, dict[str, Any]]] = [
     (
         "Bonjour, nous sommes 4 et souhaitons aller de Lyon à Marseille le 15 août, retour le 22 août.",
-        {"nombre_personnes": 4, "date_depart": "le 15 août", "date_arrivee": "le 22 août",
+        {"nombre_personnes": 4, "date_depart": "le 15 août", "date_retour": "le 22 août",
          "lieu_depart": "Lyon", "destination": "Marseille"},
     ),
     (
         "Je voudrais partir de Bordeaux demain, mais je ne sais pas encore où aller.",
-        {"nombre_personnes": 1, "date_depart": "demain", "date_arrivee": None,
+        {"nombre_personnes": 1, "date_depart": "demain", "date_retour": None,
          "lieu_depart": "Bordeaux", "destination": None},
     ),
     (
         "Avec ma femme et nos deux enfants on veut aller à Nice.",
-        {"nombre_personnes": 4, "date_depart": None, "date_arrivee": None,
+        {"nombre_personnes": 4, "date_depart": None, "date_retour": None,
          "lieu_depart": None, "destination": "Nice"},
     ),
     (
         "Je voudrais un billet pour Strasbourg avec mon frère vendredi.",
-        {"nombre_personnes": 2, "date_depart": "vendredi", "date_arrivee": None,
+        {"nombre_personnes": 2, "date_depart": "vendredi", "date_retour": None,
          "lieu_depart": None, "destination": "Strasbourg"},
     ),
 ]
@@ -89,3 +89,4 @@ class LLMClient:
                 return json.loads(content)
         except (httpx.HTTPError, KeyError, IndexError, json.JSONDecodeError) as exc:
             raise LLMError(f"Échec de l'appel au LLM ({self.base_url}) : {exc}") from exc
+

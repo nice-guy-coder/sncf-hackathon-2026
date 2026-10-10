@@ -14,7 +14,7 @@ class TravelInfo(BaseModel):
     """Sortie finale renvoyée à l'utilisateur."""
     nombre_personnes: Optional[int] = Field(None, description="Nombre total de voyageurs (null si non précisé)")
     date_depart: Optional[str] = Field(None, description="Date de départ au format YYYY-MM-DD (null si non précisé)")
-    date_arrivee: Optional[str] = Field(None, description="Date d'arrivée / de retour au format YYYY-MM-DD (null si non précisé)")
+    date_retour: Optional[str] = Field(None, description="Date de retour au format YYYY-MM-DD (null si non précisé)")
     lieu_depart: Optional[str] = Field(None, description="Ville ou gare de départ (null si non précisé)")
     destination: Optional[str] = Field(None, description="Destination précise (null si non précisé)")
     destination_connue: bool = Field(False, description="True si une destination précise est mentionnée")
@@ -33,10 +33,11 @@ LLM_JSON_SCHEMA: dict = {
     "properties": {
         "nombre_personnes": _nullable("integer"),
         "date_depart": _nullable("string"),
-        "date_arrivee": _nullable("string"),
+        "date_retour": _nullable("string"),
         "lieu_depart": _nullable("string"),
         "destination": _nullable("string"),
     },
-    "required": ["nombre_personnes", "date_depart", "date_arrivee", "lieu_depart", "destination"],
+    "required": ["nombre_personnes", "date_depart", "date_retour", "lieu_depart", "destination"],
     "additionalProperties": False,
 }
+

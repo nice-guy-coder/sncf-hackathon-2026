@@ -95,27 +95,27 @@ def postprocess(raw: dict[str, Any], description: str, ref: Optional[date] = Non
     ref = ref or today()
 
     depart_expr = _clean_date_expr(raw.get("date_depart"), description)
-    arrivee_expr = _clean_date_expr(raw.get("date_arrivee"), description)
+    retour_expr = _clean_date_expr(raw.get("date_retour"), description)
 
     if (rng := split_range(depart_expr)):
         depart_expr = rng[0]
-        arrivee_expr = arrivee_expr if arrivee_expr and not split_range(arrivee_expr) else rng[1]
-    elif (rng := split_range(arrivee_expr)):
-        arrivee_expr = rng[1]
+        retour_expr = retour_expr if retour_expr and not split_range(retour_expr) else rng[1]
+    elif (rng := split_range(retour_expr)):
+        retour_expr = rng[1]
         depart_expr = depart_expr or rng[0]
 
     date_depart = normalize_date(depart_expr, ref)
 
-    arrivee_ref = ref
+    retour_ref = ref
     if date_depart and re.fullmatch(r"\d{4}-\d{2}-\d{2}", date_depart):
         try:
-            arrivee_ref = date.fromisoformat(date_depart)
+            retour_ref = date.fromisoformat(date_depart)
         except ValueError:
             pass
 
-    date_arrivee = normalize_date(arrivee_expr, arrivee_ref)
-    if date_arrivee == date_depart and arrivee_expr == depart_expr:
-        date_arrivee = None
+    date_retour = normalize_date(retour_expr, retour_ref)
+    if date_retour == date_depart and retour_expr == depart_expr:
+        date_retour = None
 
     destination = _clean_place(raw.get("destination"), description)
     lieu_depart = _clean_place(raw.get("lieu_depart"), description)
@@ -124,7 +124,7 @@ def postprocess(raw: dict[str, Any], description: str, ref: Optional[date] = Non
     return TravelInfo(
         nombre_personnes=_clean_count(raw.get("nombre_personnes")),
         date_depart=date_depart,
-        date_arrivee=date_arrivee,
+        date_retour=date_retour,
         lieu_depart=lieu_depart,
         destination=destination,
         destination_connue=destination is not None,
@@ -174,7 +174,7 @@ def extract_heuristic_fallback(description: str, ref: Optional[date] = None) -> 
     return TravelInfo(
         nombre_personnes=pax,
         date_depart=date_dep,
-        date_arrivee=None,
+        date_retour=None,
         lieu_depart=dep,
         destination=dest,
         destination_connue=dest is not None,
@@ -192,3 +192,4 @@ class TravelExtractor:
         except Exception as exc:
             logger.warning(f"Serveur LLM inaccessible ({exc}), bascule sur l'extracteur heuristique.")
             return extract_heuristic_fallback(description, ref)
+

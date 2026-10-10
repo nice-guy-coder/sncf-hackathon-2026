@@ -22,3 +22,4 @@ fi
 
 mv "${TARGET}.part" "$TARGET"
 echo "[model-downloader] Terminé : $(du -h "$TARGET" | cut -f1)"
+

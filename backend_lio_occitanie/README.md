@@ -27,7 +27,7 @@ POST /api/feedback             -> Retour d'expérience après sortie pour nourri
    - `transcription` (texte brut retranscrit)
    - `nombre_personnes` (int ou `null`)
    - `date_depart` (format ISO `YYYY-MM-DD` ou `null`)
-   - `date_arrivee` (format ISO `YYYY-MM-DD` ou `null`)
+   - `date_retour` (format ISO `YYYY-MM-DD` ou `null`)
    - `lieu_depart` (str ou `null`)
    - `destination` (str ou `null`)
    - `destination_connue` (bool)

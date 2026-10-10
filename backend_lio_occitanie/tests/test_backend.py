@@ -112,7 +112,7 @@ def test_travel_extractor_mock():
             return {
                 "nombre_personnes": 30,
                 "date_depart": "2026-11-15",
-                "date_arrivee": None,
+                "date_retour": None,
                 "lieu_depart": "Toulouse",
                 "destination": "Carcassonne",
             }
@@ -124,6 +124,7 @@ def test_travel_extractor_mock():
     assert res.destination == "Carcassonne"
     assert res.destination_connue is True
     assert res.date_depart == "2026-11-15"
+    assert res.date_retour is None
 
 def test_travel_extractor_heuristic_fallback():
     """Vérifie que la bascule automatique sur l'heuristique fonctionne si le serveur LLM échoue."""

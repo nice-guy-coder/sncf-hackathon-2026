@@ -158,3 +158,4 @@ def split_range(text: Optional[str]) -> Optional[tuple[str, str]]:
     if m:
         return m.group(1).strip(), m.group(2).strip()
     return None
+
