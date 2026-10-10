@@ -1,5 +1,7 @@
 # Analyse de cohérence — 10 octobre 2026
 
+> Mise à jour du périmètre : le parcours utilise désormais des attractions touristiques autour d’une gare ou selon un thème unique si la destination est inconnue. Les décisions historiques ci-dessous relatives aux hébergements et à l’analyse par règles sont remplacées par le [contrat actuel](../backend_lio_occitanie/README.md#contrat-pédagogique-et-attractions). Le chat et Whisper sollicitent le LLM avec le pré-prompt de la synthèse pédagogique.
+
 ## Documents et données examinés
 
 - Fiche de cadrage hackathon, 13 pages, y compris l’annexe tarifaire en images et le processus actuel de réservation.

@@ -14,7 +14,7 @@ def _normalize_station_name(name: str) -> str:
     n = ''.join(c for c in unicodedata.normalize('NFKD', name.lower()) if not unicodedata.combining(c))
     n = re.sub(r"^(gare de|gare d'|gare du|gare des)\s+", "", n)
     n = n.replace("-", " ").replace(" saint ", " st ")
-    aliases = {"toulouse matabiau": "toulouse", "montpellier saint roch": "montpellier", "montauban ville bourbon": "montauban"}
+    aliases = {"toulouse matabiau": "toulouse", "montpellier st roch": "montpellier", "montauban ville bourbon": "montauban"}
     n = ' '.join(n.split())
     return aliases.get(n, n)
 

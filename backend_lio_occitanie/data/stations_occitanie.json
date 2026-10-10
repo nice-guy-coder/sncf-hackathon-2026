@@ -1,0 +1,2742 @@
+[
+  {
+    "id": "87611616",
+    "name": "Foix",
+    "commune": "FOIX",
+    "latitude": 42.96964899727265,
+    "longitude": 1.6068841697880913,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611558",
+    "name": "Luzenac-Garanou",
+    "commune": "GARANOU",
+    "latitude": 42.76430323969535,
+    "longitude": 1.7532404291902302,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615146",
+    "name": "Pomas",
+    "commune": "POMAS",
+    "latitude": 43.11218352511363,
+    "longitude": 2.2882948704212365,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611772",
+    "name": "Gimont-Cahuzac",
+    "commune": "GIMONT",
+    "latitude": 43.63309623152395,
+    "longitude": 0.8675837144201928,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615211",
+    "name": "Espéraza",
+    "commune": "ESPERAZA",
+    "latitude": 42.93579756163279,
+    "longitude": 2.2182433489734756,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611889",
+    "name": "Moissac",
+    "commune": "MOISSAC",
+    "latitude": 44.10260974718544,
+    "longitude": 1.0781352363928158,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87618058",
+    "name": "Pommevic",
+    "commune": "POMMEVIC",
+    "latitude": 44.10209924457028,
+    "longitude": 0.9337278307313387,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611244",
+    "name": "Montauban-Ville-Bourbon",
+    "commune": "MONTAUBAN",
+    "latitude": 44.01531695306632,
+    "longitude": 1.3400377440381754,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611673",
+    "name": "Grisolles",
+    "commune": "GRISOLLES",
+    "latitude": 43.82896110458654,
+    "longitude": 1.3010236253325818,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611897",
+    "name": "Castelsarrasin",
+    "commune": "CASTELSARRASIN",
+    "latitude": 44.04039402655749,
+    "longitude": 1.114425960656528,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87618082",
+    "name": "Golfech",
+    "commune": "GOLFECH",
+    "latitude": 44.116212667335994,
+    "longitude": 0.8536376978396527,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613489",
+    "name": "Lexos",
+    "commune": "VAREN",
+    "latitude": 44.14219986224255,
+    "longitude": 1.8865021677979374,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615773",
+    "name": "Luc-Primaube",
+    "commune": "LUC-LA-PRIMAUBE",
+    "latitude": 44.29165974006234,
+    "longitude": 2.5544841141258576,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613224",
+    "name": "Aubin",
+    "commune": "AUBIN",
+    "latitude": 44.527366678973806,
+    "longitude": 2.2390913657241547,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611525",
+    "name": "Mérens-les-Vals",
+    "commune": "MERENS-LES-VALS",
+    "latitude": 42.65936456853216,
+    "longitude": 1.8373366160617792,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611368",
+    "name": "Saverdun",
+    "commune": "SAVERDUN",
+    "latitude": 43.23937882221968,
+    "longitude": 1.570693505005693,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611350",
+    "name": "Vernet-d'Ariège",
+    "commune": "LE VERNET",
+    "latitude": 43.18934614577398,
+    "longitude": 1.611607072773936,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611343",
+    "name": "Pamiers",
+    "commune": "PAMIERS",
+    "latitude": 43.11611318796463,
+    "longitude": 1.6195981760446407,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611624",
+    "name": "St-Jean-de-Verges",
+    "commune": "CRAMPAGNA",
+    "latitude": 43.01220711365853,
+    "longitude": 1.608078902407973,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611590",
+    "name": "Tarascon-sur-Ariège",
+    "commune": "TARASCON-SUR-ARIEGE",
+    "latitude": 42.84948833935012,
+    "longitude": 1.5999864431369157,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783530",
+    "name": "Chanac",
+    "commune": "ESCLANEDES",
+    "latitude": 44.4740883799609,
+    "longitude": 3.345563721851413,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783290",
+    "name": "Chirac",
+    "commune": "BOURGS SUR COLAGNE",
+    "latitude": 44.51567050938178,
+    "longitude": 3.2544915890957196,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615419",
+    "name": "Marssac-sur-Tarn",
+    "commune": "MARSSAC-SUR-TARN",
+    "latitude": 43.9150052339724,
+    "longitude": 2.027114799775791,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615252",
+    "name": "Gaillac",
+    "commune": "GAILLAC",
+    "latitude": 43.90710177749618,
+    "longitude": 1.8966822963013867,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615674",
+    "name": "Tanus",
+    "commune": "TANUS",
+    "latitude": 44.10039294423004,
+    "longitude": 2.3153035026768807,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783266",
+    "name": "Aumont-Aubrac",
+    "commune": "PEYRE EN AUBRAC",
+    "latitude": 44.70619122424278,
+    "longitude": 3.2911789438156727,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87734350",
+    "name": "Langogne",
+    "commune": "LANGOGNE",
+    "latitude": 44.73198417083075,
+    "longitude": 3.858624245649865,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783647",
+    "name": "Bagnols-Chadenet",
+    "commune": "CHADENET",
+    "latitude": 44.528613895541916,
+    "longitude": 3.6283541224046663,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783241",
+    "name": "St-Chély-d'Apcher",
+    "commune": "SAINT-CHELY-D'APCHER",
+    "latitude": 44.78843433611811,
+    "longitude": 3.272571382393344,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87618710",
+    "name": "Saléchan-Siradan",
+    "commune": "SALECHAN",
+    "latitude": 42.95887796522891,
+    "longitude": 0.633294284213401,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87671339",
+    "name": "Lourdes",
+    "commune": "LOURDES",
+    "latitude": 43.1004855445134,
+    "longitude": -0.04303318764833675,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775171",
+    "name": "La Bastide-St-Laurent-les-Bains",
+    "commune": "LA BASTIDE-PUYLAURENT",
+    "latitude": 44.59267783265876,
+    "longitude": 3.9038318571846906,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783308",
+    "name": "Le Monastier",
+    "commune": "BOURGS SUR COLAGNE",
+    "latitude": 44.50637197516976,
+    "longitude": 3.251317296253546,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87328021",
+    "name": "Les Cauquillous",
+    "commune": "LAVAUR",
+    "latitude": 43.73413477688183,
+    "longitude": 1.7545664243145642,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615344",
+    "name": "St-Sulpice",
+    "commune": "SAINT-SULPICE-LA-POINTE",
+    "latitude": 43.77510403833118,
+    "longitude": 1.6805264592489362,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615625",
+    "name": "Carmaux",
+    "commune": "CARMAUX",
+    "latitude": 44.04850659306776,
+    "longitude": 2.152253438233017,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615526",
+    "name": "Labruguière",
+    "commune": "LABRUGUIERE",
+    "latitude": 43.542461904462805,
+    "longitude": 2.259409368471138,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611764",
+    "name": "Aubiet",
+    "commune": "AUBIET",
+    "latitude": 43.65004416375692,
+    "longitude": 0.7892990132456735,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611699",
+    "name": "Montbartier",
+    "commune": "MONTBARTIER",
+    "latitude": 43.925419061310244,
+    "longitude": 1.2651841510877038,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611681",
+    "name": "Dieupentale",
+    "commune": "DIEUPENTALE",
+    "latitude": 43.8665201566221,
+    "longitude": 1.2750293944806552,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613471",
+    "name": "Laguépie",
+    "commune": "LAGUEPIE",
+    "latitude": 44.145476040905216,
+    "longitude": 1.969633061940333,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611459",
+    "name": "Lavilledieu",
+    "commune": "LA VILLE-DIEU-DU-TEMPLE",
+    "latitude": 44.03547600931026,
+    "longitude": 1.2144892314988363,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613802",
+    "name": "Cordes-Vindrac",
+    "commune": "VINDRAC-ALAYRAC",
+    "latitude": 44.068868064241855,
+    "longitude": 1.8991481546329678,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615484",
+    "name": "Damiatte-St-Paul",
+    "commune": "DAMIATTE",
+    "latitude": 43.65635946502231,
+    "longitude": 1.9742599663911469,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615328",
+    "name": "Rabastens-Couffouleux",
+    "commune": "COUFOULEUX",
+    "latitude": 43.820451580346045,
+    "longitude": 1.7325050804750268,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611327",
+    "name": "Varilhes",
+    "commune": "VARILHES",
+    "latitude": 43.04150500834471,
+    "longitude": 1.628432371769581,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611533",
+    "name": "Ax-les-Thermes",
+    "commune": "AX-LES-THERMES",
+    "latitude": 42.724771434706476,
+    "longitude": 1.8334666264609596,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611517",
+    "name": "L'Hospitalet-près-l'Andorre",
+    "commune": "L'HOSPITALET-PRES-L'ANDORRE",
+    "latitude": 42.58950239779913,
+    "longitude": 1.8000268400977735,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615203",
+    "name": "Couiza-Montazels",
+    "commune": "MONTAZELS",
+    "latitude": 42.942410627466856,
+    "longitude": 2.2482248910070126,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784264",
+    "name": "Port-Vendres",
+    "commune": "PORT-VENDRES",
+    "latitude": 42.513374300769726,
+    "longitude": 3.1026826095318873,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781161",
+    "name": "Coursan",
+    "commune": "COURSAN",
+    "latitude": 43.23103951967137,
+    "longitude": 3.048035369106046,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611483",
+    "name": "Latour-de-Carol-Enveitg",
+    "commune": "ENVEITG",
+    "latitude": 42.4581435388116,
+    "longitude": 1.905858604509926,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615229",
+    "name": "Campagne",
+    "commune": "CAMPAGNE-SUR-AUDE",
+    "latitude": 42.91674794966122,
+    "longitude": 2.205488639530065,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784207",
+    "name": "Elne",
+    "commune": "ELNE",
+    "latitude": 42.5971934900186,
+    "longitude": 2.963483051802395,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615054",
+    "name": "Bram",
+    "commune": "BRAM",
+    "latitude": 43.24466006024209,
+    "longitude": 2.1149979950588724,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611574",
+    "name": "Les Cabannes",
+    "commune": "LES CABANNES",
+    "latitude": 42.78643042782204,
+    "longitude": 1.6862668512657988,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783548",
+    "name": "Le Bruel",
+    "commune": "ESCLANEDES",
+    "latitude": 44.48120990146856,
+    "longitude": 3.358285463669192,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615542",
+    "name": "Mazamet",
+    "commune": "MAZAMET",
+    "latitude": 43.49789107577016,
+    "longitude": 2.3748074356534454,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615245",
+    "name": "Tessonnières",
+    "commune": "GAILLAC",
+    "latitude": 43.929369094000315,
+    "longitude": 1.939093540357017,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783282",
+    "name": "Marvejols",
+    "commune": "BOURGS SUR COLAGNE",
+    "latitude": 44.53468246417781,
+    "longitude": 3.269484432074248,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615492",
+    "name": "Vielmur-sur-Agout",
+    "commune": "VIELMUR-SUR-AGOUT",
+    "latitude": 43.62410047591457,
+    "longitude": 2.0894172233463033,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87734343",
+    "name": "Chapeauroux",
+    "commune": "SAINT BONNET-LAVAL",
+    "latitude": 44.83784076273907,
+    "longitude": 3.742013580195539,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783563",
+    "name": "Barjac",
+    "commune": "BARJAC",
+    "latitude": 44.499384073125185,
+    "longitude": 3.410793616996403,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783761",
+    "name": "Laissac",
+    "commune": "LAISSAC-SEVERAC L'EGLISE",
+    "latitude": 44.375053854068625,
+    "longitude": 2.8223118638801497,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783456",
+    "name": "Tournemire-Roquefort",
+    "commune": "TOURNEMIRE",
+    "latitude": 43.96998189612203,
+    "longitude": 3.0165913632374823,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783605",
+    "name": "Mende",
+    "commune": "MENDE",
+    "latitude": 44.522411707541636,
+    "longitude": 3.501918908967538,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775197",
+    "name": "Villefort",
+    "commune": "VILLEFORT",
+    "latitude": 44.439462049410466,
+    "longitude": 3.9240352622614134,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783324",
+    "name": "Banassac-La Canourgue",
+    "commune": "BANASSAC-CANILHAC",
+    "latitude": 44.439516082219974,
+    "longitude": 3.1858285434919256,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613661",
+    "name": "Viviez-Decazeville",
+    "commune": "VIVIEZ",
+    "latitude": 44.555952535300634,
+    "longitude": 2.218316324853335,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775148",
+    "name": "Chasseradès",
+    "commune": "MONT LOZERE ET GOULET",
+    "latitude": 44.55390295387285,
+    "longitude": 3.839817632599878,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613463",
+    "name": "Najac",
+    "commune": "NAJAC",
+    "latitude": 44.22260033791447,
+    "longitude": 1.9765493376633056,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613356",
+    "name": "Caussade",
+    "commune": "CAUSSADE",
+    "latitude": 44.160692567128265,
+    "longitude": 1.5327486165298967,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611863",
+    "name": "Valence-d'Agen",
+    "commune": "VALENCE",
+    "latitude": 44.11153761148149,
+    "longitude": 0.8925771401962702,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613398",
+    "name": "Albias",
+    "commune": "ALBIAS",
+    "latitude": 44.090813168973014,
+    "longitude": 1.4429560112963207,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611855",
+    "name": "Lamagistère",
+    "commune": "LAMAGISTERE",
+    "latitude": 44.12676987492404,
+    "longitude": 0.8256384900920347,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611871",
+    "name": "Malause",
+    "commune": "MALAUSE",
+    "latitude": 44.0870597577623,
+    "longitude": 0.9732443211371328,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783670",
+    "name": "Belvezet",
+    "commune": "MONT LOZERE ET GOULET",
+    "latitude": 44.561755245084356,
+    "longitude": 3.7518074733397033,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615310",
+    "name": "Lisle-sur-Tarn",
+    "commune": "LISLE-SUR-TARN",
+    "latitude": 43.85784330032542,
+    "longitude": 1.8090874308502318,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615195",
+    "name": "Albi-Madeleine",
+    "commune": "ALBI",
+    "latitude": 43.93862034173153,
+    "longitude": 2.141024616620396,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615005",
+    "name": "Albi",
+    "commune": "ALBI",
+    "latitude": 43.922346996567065,
+    "longitude": 2.1377846403694747,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783654",
+    "name": "Allenc",
+    "commune": "ALLENC",
+    "latitude": 44.54152103114096,
+    "longitude": 3.664130358302336,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615468",
+    "name": "Castres",
+    "commune": "CASTRES",
+    "latitude": 43.599117635848486,
+    "longitude": 2.2311520590738567,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615476",
+    "name": "Lavaur",
+    "commune": "LAVAUR",
+    "latitude": 43.70355914646245,
+    "longitude": 1.8131149291692568,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87111864",
+    "name": "Balsièges-Bourg",
+    "commune": "BALSIEGES",
+    "latitude": 44.48206935116244,
+    "longitude": 3.4566016955389554,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783514",
+    "name": "Les Salelles",
+    "commune": "LES SALELLES",
+    "latitude": 44.483145218004836,
+    "longitude": 3.279742536294395,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87594754",
+    "name": "Puybrun",
+    "commune": "PUYBRUN",
+    "latitude": 44.92171661680335,
+    "longitude": 1.7842626560329264,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87594333",
+    "name": "Souillac",
+    "commune": "SOUILLAC",
+    "latitude": 44.90245284532566,
+    "longitude": 1.4651787622009547,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87594739",
+    "name": "Vayrac",
+    "commune": "VAYRAC",
+    "latitude": 44.950128343197264,
+    "longitude": 1.7063692202625202,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613059",
+    "name": "Gramat",
+    "commune": "GRAMAT",
+    "latitude": 44.77346913215607,
+    "longitude": 1.7223161770331452,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613000",
+    "name": "Cahors",
+    "commune": "CAHORS",
+    "latitude": 44.44790177604269,
+    "longitude": 1.4330165612833392,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784298",
+    "name": "Banyuls-sur-Mer",
+    "commune": "BANYULS-SUR-MER",
+    "latitude": 42.48289092160289,
+    "longitude": 3.1248658142098367,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613174",
+    "name": "Dégagnac",
+    "commune": "DEGAGNAC",
+    "latitude": 44.652454761152846,
+    "longitude": 1.3408823466231798,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784785",
+    "name": "Planès",
+    "commune": "PLANES",
+    "latitude": 42.50103720179174,
+    "longitude": 2.136887781567021,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87671008",
+    "name": "Tarbes",
+    "commune": "TARBES",
+    "latitude": 43.240313930679,
+    "longitude": 0.06829852091108149,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784173",
+    "name": "Rivesaltes",
+    "commune": "RIVESALTES",
+    "latitude": 42.76634055666109,
+    "longitude": 2.8677512821930202,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87594747",
+    "name": "Bétaille",
+    "commune": "BETAILLE",
+    "latitude": 44.942428775467775,
+    "longitude": 1.7346859148277398,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613075",
+    "name": "Assier",
+    "commune": "ASSIER",
+    "latitude": 44.67470726731629,
+    "longitude": 1.8693751733569723,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784769",
+    "name": "Fontpédrouse-St-Thomas-les-Bains",
+    "commune": "FONTPEDROUSE",
+    "latitude": 42.5136987477588,
+    "longitude": 2.188619483352487,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784629",
+    "name": "Marquixanes",
+    "commune": "MARQUIXANES",
+    "latitude": 42.644115910444775,
+    "longitude": 2.4936066653563693,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613042",
+    "name": "Rocamadour-Padirac",
+    "commune": "ROCAMADOUR",
+    "latitude": 44.81823958978545,
+    "longitude": 1.6574439880699459,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784728",
+    "name": "Olette-Canaveilles-les-Bains",
+    "commune": "OLETTE",
+    "latitude": 42.55466061609856,
+    "longitude": 2.2720118589384826,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613141",
+    "name": "Gourdon",
+    "commune": "GOURDON",
+    "latitude": 44.74065794684751,
+    "longitude": 1.3895984026348112,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615161",
+    "name": "Limoux",
+    "commune": "LIMOUX",
+    "latitude": 43.05646966538742,
+    "longitude": 2.2230871780167836,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781088",
+    "name": "Leucate-la-Franqui",
+    "commune": "LEUCATE",
+    "latitude": 42.932654375280194,
+    "longitude": 3.012754202467938,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781104",
+    "name": "Narbonne",
+    "commune": "NARBONNE",
+    "latitude": 43.19095737821529,
+    "longitude": 3.006223725835589,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615120",
+    "name": "Couffoulens-Leuc",
+    "commune": "COUFFOULENS",
+    "latitude": 43.155197220269976,
+    "longitude": 2.3168956165544428,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615187",
+    "name": "Alet-les-Bains",
+    "commune": "ALET-LES-BAINS",
+    "latitude": 42.997274507345445,
+    "longitude": 2.2519980521275147,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87594564",
+    "name": "Les Quatre-Routes",
+    "commune": "LE VIGNON-EN-QUERCY",
+    "latitude": 44.99766667986293,
+    "longitude": 1.6437417239091077,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87594325",
+    "name": "Gignac-Cressensac",
+    "commune": "GIGNAC",
+    "latitude": 45.01391950249178,
+    "longitude": 1.4834473784001343,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613091",
+    "name": "Figeac",
+    "commune": "FIGEAC",
+    "latitude": 44.60378724955923,
+    "longitude": 2.0378203906943795,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87594762",
+    "name": "Bretenoux-Biars",
+    "commune": "BIARS-SUR-CERE",
+    "latitude": 44.927532013111346,
+    "longitude": 1.8441277827072518,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611749",
+    "name": "Auch",
+    "commune": "AUCH",
+    "latitude": 43.647617080677584,
+    "longitude": 0.5969007206138052,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611806",
+    "name": "L'Isle-Jourdain",
+    "commune": "L'ISLE-JOURDAIN",
+    "latitude": 43.617268040544126,
+    "longitude": 1.0898587722800717,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87618215",
+    "name": "Villenouvelle",
+    "commune": "VILLENOUVELLE",
+    "latitude": 43.43491005663035,
+    "longitude": 1.65689776195575,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87612002",
+    "name": "Labège-Innopole",
+    "commune": "LABEGE",
+    "latitude": 43.551247706170734,
+    "longitude": 1.50899371525348,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87446179",
+    "name": "St-Cyprien-Arènes",
+    "commune": "TOULOUSE",
+    "latitude": 43.593926405542774,
+    "longitude": 1.4164796882110926,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611830",
+    "name": "Pibrac",
+    "commune": "PIBRAC",
+    "latitude": 43.62152420103192,
+    "longitude": 1.2893007540727888,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611301",
+    "name": "St-Agne",
+    "commune": "TOULOUSE",
+    "latitude": 43.57918293347269,
+    "longitude": 1.4494444861466602,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611061",
+    "name": "Carbonne",
+    "commune": "CARBONNE",
+    "latitude": 43.29709978862214,
+    "longitude": 1.2109189514628984,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611038",
+    "name": "Muret",
+    "commune": "MURET",
+    "latitude": 43.4632803596342,
+    "longitude": 1.3232042918269025,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611657",
+    "name": "St-Jory",
+    "commune": "SAINT-JORY",
+    "latitude": 43.74123080262663,
+    "longitude": 1.36864835260573,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611665",
+    "name": "Castelnau-d'Estrétefonds",
+    "commune": "CASTELNAU-D'ESTRETEFONDS",
+    "latitude": 43.78922172354108,
+    "longitude": 1.3386378612360332,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611053",
+    "name": "Longages-Noé",
+    "commune": "LONGAGES",
+    "latitude": 43.35480134821862,
+    "longitude": 1.2513558859073124,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87353599",
+    "name": "St-Martin-du-Touch",
+    "commune": "TOULOUSE",
+    "latitude": 43.5998595972704,
+    "longitude": 1.3714182370263581,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87612028",
+    "name": "Labège-Village",
+    "commune": "LABEGE",
+    "latitude": 43.53322881794506,
+    "longitude": 1.5292391960870062,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615377",
+    "name": "Gragnague",
+    "commune": "GRAGNAGUE",
+    "latitude": 43.69750531719486,
+    "longitude": 1.56784011210651,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615369",
+    "name": "Montastruc-la-Conseillère",
+    "commune": "MONTASTRUC-LA-CONSEILLERE",
+    "latitude": 43.716595972856524,
+    "longitude": 1.6003180172240965,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615112",
+    "name": "Lézignan (Aude)",
+    "commune": "LEZIGNAN-CORBIERES",
+    "latitude": 43.19900603925647,
+    "longitude": 2.765297055799668,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615260",
+    "name": "Quillan",
+    "commune": "QUILLAN",
+    "latitude": 42.87360927783308,
+    "longitude": 2.1817445107042572,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613232",
+    "name": "Cransac",
+    "commune": "CRANSAC",
+    "latitude": 44.52293685004618,
+    "longitude": 2.2717524411636907,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784637",
+    "name": "Prades-Molitg-les-Bains",
+    "commune": "PRADES",
+    "latitude": 42.620528698966,
+    "longitude": 2.4366155662827995,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784611",
+    "name": "Vinça",
+    "commune": "VINCA",
+    "latitude": 42.65049717427381,
+    "longitude": 2.5344773375797844,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613109",
+    "name": "Capdenac",
+    "commune": "CAPDENAC-GARE",
+    "latitude": 44.578727366507565,
+    "longitude": 2.077223007778907,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615039",
+    "name": "Castelnaudary",
+    "commune": "CASTELNAUDARY",
+    "latitude": 43.31235724068749,
+    "longitude": 1.9460236135980853,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613422",
+    "name": "Rodez",
+    "commune": "RODEZ",
+    "latitude": 44.36265275690909,
+    "longitude": 2.5802646043215667,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784868",
+    "name": "Osséja",
+    "commune": "OSSEJA",
+    "latitude": 42.419929746273475,
+    "longitude": 1.9770661792954325,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784256",
+    "name": "Collioure",
+    "commune": "COLLIOURE",
+    "latitude": 42.526767014719844,
+    "longitude": 3.0782027927295137,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784793",
+    "name": "Mont-Louis-La Cabanasse",
+    "commune": "LA CABANASSE",
+    "latitude": 42.50196419456783,
+    "longitude": 2.1132280396853558,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613877",
+    "name": "Salles-Courbatiès",
+    "commune": "SALLES-COURBATIES",
+    "latitude": 44.475663915063684,
+    "longitude": 2.079314020919471,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615286",
+    "name": "Carcassonne",
+    "commune": "CARCASSONNE",
+    "latitude": 43.21798496729815,
+    "longitude": 2.3477547806381045,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784231",
+    "name": "Argelès-sur-Mer",
+    "commune": "ARGELES-SUR-MER",
+    "latitude": 42.544036286626245,
+    "longitude": 3.0216389611035823,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784827",
+    "name": "Estavar",
+    "commune": "ESTAVAR",
+    "latitude": 42.46324592616183,
+    "longitude": 2.01781999265747,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784660",
+    "name": "Ria",
+    "commune": "RIA-SIRACH",
+    "latitude": 42.60561865453048,
+    "longitude": 2.3984654683644457,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784561",
+    "name": "Ille-sur-Têt",
+    "commune": "ILLE-SUR-TET",
+    "latitude": 42.67215907592527,
+    "longitude": 2.630941183276494,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615138",
+    "name": "Verzeille",
+    "commune": "LEUC",
+    "latitude": 43.13048958861282,
+    "longitude": 2.321303189561556,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613323",
+    "name": "Lalbenque-Fontanes",
+    "commune": "FONTANES",
+    "latitude": 44.33218068713503,
+    "longitude": 1.5113882950272095,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87594572",
+    "name": "St-Denis-près-Martel",
+    "commune": "SAINT-DENIS-LES-MARTEL",
+    "latitude": 44.9457180382137,
+    "longitude": 1.6664958614371754,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87703975",
+    "name": "Nîmes-Pont du Gard",
+    "commune": "MANDUEL",
+    "latitude": 43.81564362843685,
+    "longitude": 4.505903653936227,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775221",
+    "name": "Chamborigaud",
+    "commune": "CHAMBORIGAUD",
+    "latitude": 44.30032167692082,
+    "longitude": 3.9794298699039734,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87594796",
+    "name": "Laval-de-Cère",
+    "commune": "LAVAL-DE-CERE",
+    "latitude": 44.95117079755799,
+    "longitude": 1.9317057080515334,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613604",
+    "name": "Bagnac",
+    "commune": "BAGNAC-SUR-CELE",
+    "latitude": 44.66510697896942,
+    "longitude": 2.160130050569516,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775825",
+    "name": "Le Cailar",
+    "commune": "LE CAILAR",
+    "latitude": 43.683276653084626,
+    "longitude": 4.234917595726394,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781260",
+    "name": "Vias",
+    "commune": "VIAS",
+    "latitude": 43.31607285020208,
+    "longitude": 3.425534755532907,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87773408",
+    "name": "Lunel",
+    "commune": "LUNEL",
+    "latitude": 43.6795857888875,
+    "longitude": 4.131152230663541,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87773424",
+    "name": "Lunel-Viel",
+    "commune": "LUNEL-VIEL",
+    "latitude": 43.68112696283045,
+    "longitude": 4.0936139002705305,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781278",
+    "name": "Agde",
+    "commune": "AGDE",
+    "latitude": 43.31685035210468,
+    "longitude": 3.4616732347033987,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87773556",
+    "name": "Frontignan",
+    "commune": "FRONTIGNAN",
+    "latitude": 43.44488338978884,
+    "longitude": 3.7589597038501634,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87773531",
+    "name": "Vic-Mireval",
+    "commune": "VIC-LA-GARDIOLE",
+    "latitude": 43.50077652727285,
+    "longitude": 3.7995197905181075,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615732",
+    "name": "Naucelle",
+    "commune": "NAUCELLE",
+    "latitude": 44.185426071652365,
+    "longitude": 2.3634608387679235,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613893",
+    "name": "Villefranche-de-Rouergue",
+    "commune": "VILLEFRANCHE-DE-ROUERGUE",
+    "latitude": 44.347748614440754,
+    "longitude": 2.0373305588059067,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781534",
+    "name": "Montpaon",
+    "commune": "FONDAMENTE",
+    "latitude": 43.856249962699515,
+    "longitude": 3.1134582466150227,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783365",
+    "name": "Sévérac-le-Château",
+    "commune": "SEVERAC D'AVEYRON",
+    "latitude": 44.32588340397441,
+    "longitude": 3.056233833704843,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783001",
+    "name": "Millau",
+    "commune": "MILLAU",
+    "latitude": 44.092216067751046,
+    "longitude": 3.0631046071922934,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781542",
+    "name": "Ceilhes-Roqueredonde",
+    "commune": "ROQUEREDONDE",
+    "latitude": 43.80532043667279,
+    "longitude": 3.169334504011488,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87773515",
+    "name": "Villeneuve-lès-Maguelone",
+    "commune": "VILLENEUVE-LES-MAGUELONE",
+    "latitude": 43.543755107383625,
+    "longitude": 3.849918487029219,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781294",
+    "name": "Marseillan-Plage",
+    "commune": "MARSEILLAN",
+    "latitude": 43.316539913893514,
+    "longitude": 3.5315643301057644,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87773465",
+    "name": "St-Aunès",
+    "commune": "SAINT-AUNES",
+    "latitude": 43.635393718601,
+    "longitude": 3.9632582362812965,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775841",
+    "name": "St-Laurent-d'Aigouze",
+    "commune": "SAINT-LAURENT-D'AIGOUZE",
+    "latitude": 43.63914459620749,
+    "longitude": 4.193010328022384,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775858",
+    "name": "Aigues-Mortes",
+    "commune": "AIGUES-MORTES",
+    "latitude": 43.570880392705085,
+    "longitude": 4.191091754963754,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775072",
+    "name": "St-Césaire",
+    "commune": "NIMES",
+    "latitude": 43.813546438721815,
+    "longitude": 4.327963543689408,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87764555",
+    "name": "Pont-St-Esprit",
+    "commune": "PONT-SAINT-ESPRIT",
+    "latitude": 44.253477368876055,
+    "longitude": 4.6431933621606,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781559",
+    "name": "Les Cabrils",
+    "commune": "JONCELS",
+    "latitude": 43.766655076601744,
+    "longitude": 3.182069196975858,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87773200",
+    "name": "Sète",
+    "commune": "SETE",
+    "latitude": 43.41279860024956,
+    "longitude": 3.696608504888424,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87688887",
+    "name": "Montpellier Sud-de-France",
+    "commune": "LATTES",
+    "latitude": 43.59059396779133,
+    "longitude": 3.9135030318599937,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87671172",
+    "name": "Tournay",
+    "commune": "TOURNAY",
+    "latitude": 43.18407862398775,
+    "longitude": 0.2382583439758758,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87671123",
+    "name": "Lannemezan",
+    "commune": "LANNEMEZAN",
+    "latitude": 43.11417007041924,
+    "longitude": 0.3865325366077328,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781666",
+    "name": "Magalas",
+    "commune": "MAGALAS",
+    "latitude": 43.46767292793031,
+    "longitude": 3.2294988112276775,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784777",
+    "name": "Sauto",
+    "commune": "SAUTO",
+    "latitude": 42.5061788206574,
+    "longitude": 2.1597384192133458,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784843",
+    "name": "Err",
+    "commune": "ERR",
+    "latitude": 42.44276718288121,
+    "longitude": 2.0288892499999425,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784876",
+    "name": "Bourg-Madame",
+    "commune": "BOURG-MADAME",
+    "latitude": 42.432413339498716,
+    "longitude": 1.9486839777524239,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615757",
+    "name": "Baraqueville-Carcenac-Peyralès",
+    "commune": "BARAQUEVILLE",
+    "latitude": 44.2702755079683,
+    "longitude": 2.427577694623406,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784736",
+    "name": "Nyers",
+    "commune": "NYER",
+    "latitude": 42.54164503821278,
+    "longitude": 2.2630259970944433,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783431",
+    "name": "St-Rome-de-Cernon",
+    "commune": "SAINT-ROME-DE-CERNON",
+    "latitude": 44.001321472280786,
+    "longitude": 2.969044671872089,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783423",
+    "name": "St-Georges-de-Luzençon",
+    "commune": "SAINT-GEORGES-DE-LUZENCON",
+    "latitude": 44.053221602397365,
+    "longitude": 2.9798474497397116,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784892",
+    "name": "Béna-Fanes",
+    "commune": "ENVEITG",
+    "latitude": 42.45797619022427,
+    "longitude": 1.9169819460654804,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87783340",
+    "name": "Campagnac-St-Geniez",
+    "commune": "SAINT-SATURNIN-DE-LENNE",
+    "latitude": 44.4140270893627,
+    "longitude": 3.055215536040548,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87785006",
+    "name": "Cerbère",
+    "commune": "CERBERE",
+    "latitude": 42.442512152491986,
+    "longitude": 3.165212405531213,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87613257",
+    "name": "St-Christophe",
+    "commune": "SAINT-CHRISTOPHE-VALLON",
+    "latitude": 44.46478775156926,
+    "longitude": 2.4074816936070853,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784801",
+    "name": "Bolquère-Eyne",
+    "commune": "BOLQUERE",
+    "latitude": 42.49829560510758,
+    "longitude": 2.0848848899188304,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784819",
+    "name": "Font-Romeu-Odeillo-Via",
+    "commune": "FONT-ROMEU-ODEILLO-VIA",
+    "latitude": 42.49121703669595,
+    "longitude": 2.0385041166470317,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87671313",
+    "name": "Ossun",
+    "commune": "OSSUN",
+    "latitude": 43.18258496476687,
+    "longitude": -0.021744004946743223,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87671156",
+    "name": "Capvern",
+    "commune": "CAPVERN",
+    "latitude": 43.10408336262272,
+    "longitude": 0.32868863335274573,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87671362",
+    "name": "St-Pé-de-Bigorre",
+    "commune": "SAINT-PE-DE-BIGORRE",
+    "latitude": 43.101739757904305,
+    "longitude": -0.162658748074191,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611178",
+    "name": "Loures-Barbazan",
+    "commune": "LOURES-BAROUSSE",
+    "latitude": 43.02109502600336,
+    "longitude": 0.6105286481737242,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611707",
+    "name": "Escalquens",
+    "commune": "ESCALQUENS",
+    "latitude": 43.520614616802405,
+    "longitude": 1.5400282852930929,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615013",
+    "name": "Villefranche-de-Lauragais",
+    "commune": "VILLEFRANCHE-DE-LAURAGAIS",
+    "latitude": 43.400947603563885,
+    "longitude": 1.7122217523312575,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611152",
+    "name": "Montréjeau-Gourdan-Polignan",
+    "commune": "GOURDAN-POLIGNAN",
+    "latitude": 43.07833608192313,
+    "longitude": 0.5722148705688149,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781062",
+    "name": "Port-la-Nouvelle",
+    "commune": "PORT-LA-NOUVELLE",
+    "latitude": 43.0198673799123,
+    "longitude": 3.0387116392905646,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87598755",
+    "name": "Limoux-Flassian",
+    "commune": "LIMOUX",
+    "latitude": 43.06845459180438,
+    "longitude": 2.2185497868470576,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611129",
+    "name": "Labarthe-Inard",
+    "commune": "LABARTHE-INARD",
+    "latitude": 43.104854177799275,
+    "longitude": 0.8509502906302719,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611103",
+    "name": "St-Martory",
+    "commune": "SAINT-MARTORY",
+    "latitude": 43.13812227586942,
+    "longitude": 0.9320219385164439,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611087",
+    "name": "Martres-Tolosane",
+    "commune": "MARTRES-TOLOSANE",
+    "latitude": 43.19576881182356,
+    "longitude": 1.0146171164106148,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87353581",
+    "name": "Les Ramassiers",
+    "commune": "TOULOUSE",
+    "latitude": 43.60251885296893,
+    "longitude": 1.3527654327848617,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611822",
+    "name": "Brax-Léguevin",
+    "commune": "BRAX",
+    "latitude": 43.614630974945044,
+    "longitude": 1.2372476252369404,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87612010",
+    "name": "Montaudran",
+    "commune": "TOULOUSE",
+    "latitude": 43.57614338999371,
+    "longitude": 1.4760599276183615,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611723",
+    "name": "Baziège",
+    "commune": "BAZIEGE",
+    "latitude": 43.45507502644707,
+    "longitude": 1.6173369895430267,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87615351",
+    "name": "Roquesérière",
+    "commune": "BUZET-SUR-TARN",
+    "latitude": 43.7513869369461,
+    "longitude": 1.6203354243581876,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611962",
+    "name": "Fenouillet-St-Alban",
+    "commune": "FENOUILLET",
+    "latitude": 43.68733422154655,
+    "longitude": 1.3995003108075676,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611392",
+    "name": "Vénerque-le-Vernet",
+    "commune": "VERNET",
+    "latitude": 43.43331807644394,
+    "longitude": 1.425899142804866,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611921",
+    "name": "Colomiers-Lycée-International",
+    "commune": "COLOMIERS",
+    "latitude": 43.61645499108411,
+    "longitude": 1.3140983474553167,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611434",
+    "name": "Lacourtensourt",
+    "commune": "FENOUILLET",
+    "latitude": 43.66700645493534,
+    "longitude": 1.411249995692473,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611236",
+    "name": "Luchon",
+    "commune": "BAGNERES-DE-LUCHON",
+    "latitude": 42.79727275669185,
+    "longitude": 0.5967364022377669,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611004",
+    "name": "Toulouse-Matabiau",
+    "commune": "TOULOUSE",
+    "latitude": 43.61468338961233,
+    "longitude": 1.4532997118185476,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611111",
+    "name": "Lestelle",
+    "commune": "LESTELLE-DE-SAINT-MARTORY",
+    "latitude": 43.118114462905105,
+    "longitude": 0.911406034191261,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87353573",
+    "name": "Le Toec",
+    "commune": "TOULOUSE",
+    "latitude": 43.595521427946686,
+    "longitude": 1.4015258177026686,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611939",
+    "name": "Lardenne",
+    "commune": "TOULOUSE",
+    "latitude": 43.596575160567056,
+    "longitude": 1.3841461193558857,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611095",
+    "name": "Boussens",
+    "commune": "BOUSSENS",
+    "latitude": 43.178422964380125,
+    "longitude": 0.9712654840802767,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781005",
+    "name": "Béziers",
+    "commune": "BEZIERS",
+    "latitude": 43.33672106392841,
+    "longitude": 3.2143878166677786,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87773432",
+    "name": "Valergues-Lansargues",
+    "commune": "VALERGUES",
+    "latitude": 43.672708343392515,
+    "longitude": 4.0603402386424845,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781609",
+    "name": "Bédarieux",
+    "commune": "BEDARIEUX",
+    "latitude": 43.61032057739783,
+    "longitude": 3.1504556179255037,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781575",
+    "name": "Lunas",
+    "commune": "LUNAS",
+    "latitude": 43.70332186990484,
+    "longitude": 3.1787615328746797,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87773457",
+    "name": "Baillargues",
+    "commune": "BAILLARGUES",
+    "latitude": 43.6531388227302,
+    "longitude": 4.006768359543918,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87781583",
+    "name": "Le Bousquet-d'Orb",
+    "commune": "LA TOUR-SUR-ORB",
+    "latitude": 43.67933219480131,
+    "longitude": 3.1656677153226647,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87773002",
+    "name": "Montpellier-St-Roch",
+    "commune": "MONTPELLIER",
+    "latitude": 43.606091074725896,
+    "longitude": 3.882757509945223,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775379",
+    "name": "Fons-St-Mamert",
+    "commune": "FONS",
+    "latitude": 43.90726102639001,
+    "longitude": 4.206741397754821,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775809",
+    "name": "Beauvoisin",
+    "commune": "BEAUVOISIN",
+    "latitude": 43.7245087761181,
+    "longitude": 4.321314654976704,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775866",
+    "name": "Le Grau-du-Roi",
+    "commune": "LE GRAU-DU-ROI",
+    "latitude": 43.53706983051031,
+    "longitude": 4.140573057483807,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775064",
+    "name": "Manduel-Redessan",
+    "commune": "MANDUEL",
+    "latitude": 43.826340789328576,
+    "longitude": 4.479351522598789,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775361",
+    "name": "St-Geniès-de-Malgoirès",
+    "commune": "SAINT-GENIES-DE-MALGOIRES",
+    "latitude": 43.950116086561245,
+    "longitude": 4.2149220206983475,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775833",
+    "name": "Aimargues",
+    "commune": "AIMARGUES",
+    "latitude": 43.67865141362371,
+    "longitude": 4.20874174962999,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775106",
+    "name": "Uchaud",
+    "commune": "UCHAUD",
+    "latitude": 43.757979243839756,
+    "longitude": 4.267364832101654,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775247",
+    "name": "La Levade",
+    "commune": "LA GRAND-COMBE",
+    "latitude": 44.22854435127668,
+    "longitude": 4.010335710716528,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775346",
+    "name": "Boucoiran",
+    "commune": "BOUCOIRAN-ET-NOZIERES",
+    "latitude": 43.99273013934972,
+    "longitude": 4.187543516818898,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775213",
+    "name": "Génolhac",
+    "commune": "GENOLHAC",
+    "latitude": 44.34727687337112,
+    "longitude": 3.951653511499431,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775288",
+    "name": "Alès",
+    "commune": "ALES",
+    "latitude": 44.12803162745149,
+    "longitude": 4.084967396108716,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775791",
+    "name": "Générac",
+    "commune": "GENERAC",
+    "latitude": 43.732395019069564,
+    "longitude": 4.343418417629215,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775130",
+    "name": "Gallargues",
+    "commune": "GALLARGUES-LE-MONTUEUX",
+    "latitude": 43.71604915359376,
+    "longitude": 4.171264343966491,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775007",
+    "name": "Nîmes",
+    "commune": "NIMES",
+    "latitude": 43.83252873427386,
+    "longitude": 4.3662182724514835,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775817",
+    "name": "Vauvert",
+    "commune": "VAUVERT",
+    "latitude": 43.69506047008518,
+    "longitude": 4.270078432371115,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775098",
+    "name": "Milhaud",
+    "commune": "MILHAUD",
+    "latitude": 43.78862001620448,
+    "longitude": 4.303360621176714,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87764571",
+    "name": "Bagnols",
+    "commune": "BAGNOLS-SUR-CEZE",
+    "latitude": 44.16156891906033,
+    "longitude": 4.6270604433720095,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775114",
+    "name": "Vergèze-Codognan",
+    "commune": "VERGEZE",
+    "latitude": 43.739779463751454,
+    "longitude": 4.219113329735586,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775353",
+    "name": "Nozières-Brignon",
+    "commune": "BOUCOIRAN-ET-NOZIERES",
+    "latitude": 43.975869845700586,
+    "longitude": 4.2074220799410345,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775239",
+    "name": "Ste-Cécile-d'Andorge",
+    "commune": "SAINTE-CECILE-D'ANDORGE",
+    "latitude": 44.255087639232315,
+    "longitude": 3.9757422581168655,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775254",
+    "name": "Grand'Combe-La Pise",
+    "commune": "LA GRAND-COMBE",
+    "latitude": 44.20971705278696,
+    "longitude": 4.0325884884510454,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87775023",
+    "name": "Beaucaire",
+    "commune": "BEAUCAIRE",
+    "latitude": 43.80215826433585,
+    "longitude": 4.647372767353068,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784751",
+    "name": "Thuès",
+    "commune": "THUES-ENTRE-VALLS",
+    "latitude": 42.52290667562522,
+    "longitude": 2.2227780802145936,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784546",
+    "name": "Millas",
+    "commune": "MILLAS",
+    "latitude": 42.686247635111634,
+    "longitude": 2.700928462997102,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611509",
+    "name": "Porté-Puymorens",
+    "commune": "PORTA",
+    "latitude": 42.538959362363734,
+    "longitude": 1.8248422609583512,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784744",
+    "name": "Thuès-les-Bains",
+    "commune": "NYER",
+    "latitude": 42.52888451390711,
+    "longitude": 2.24912895493451,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784157",
+    "name": "Salses",
+    "commune": "SALSES-LE-CHATEAU",
+    "latitude": 42.83556456642009,
+    "longitude": 2.917412907105233,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784009",
+    "name": "Perpignan",
+    "commune": "PERPIGNAN",
+    "latitude": 42.696215261098736,
+    "longitude": 2.879350450581682,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784710",
+    "name": "Joncet",
+    "commune": "SERDINYA",
+    "latitude": 42.56153911372631,
+    "longitude": 2.3112459470411606,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784884",
+    "name": "Ur-les-Escaldes",
+    "commune": "UR",
+    "latitude": 42.45747121158001,
+    "longitude": 1.9404669959335665,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784686",
+    "name": "Villefranche-Vernet-les-Bains",
+    "commune": "CORNEILLA-DE-CONFLENT",
+    "latitude": 42.59572535279903,
+    "longitude": 2.375377358009111,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784512",
+    "name": "Le Soler",
+    "commune": "LE SOLER",
+    "latitude": 42.67879511897198,
+    "longitude": 2.794026143682027,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784835",
+    "name": "Saillagouse",
+    "commune": "SAILLAGOUSE",
+    "latitude": 42.45673980813103,
+    "longitude": 2.032188215121433,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784850",
+    "name": "Ste-Léocadie",
+    "commune": "SAINTE-LEOCADIE",
+    "latitude": 42.44130804005553,
+    "longitude": 2.0107691656306286,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784702",
+    "name": "Serdinya",
+    "commune": "SERDINYA",
+    "latitude": 42.566981856338316,
+    "longitude": 2.3232219954155737,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87784520",
+    "name": "St-Féliu-d'Avall",
+    "commune": "SAINT-FELIU-D'AVALL",
+    "latitude": 42.675348237659776,
+    "longitude": 2.7460410790162584,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87616011",
+    "name": "Avignonet",
+    "commune": "AVIGNONET-LAURAGAIS",
+    "latitude": 43.36472177810603,
+    "longitude": 1.783815321029129,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611400",
+    "name": "Portet-St-Simon",
+    "commune": "PORTET-SUR-GARONNE",
+    "latitude": 43.52639114555991,
+    "longitude": 1.387768366437948,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611376",
+    "name": "Cintegabelle",
+    "commune": "CINTEGABELLE",
+    "latitude": 43.30524526984747,
+    "longitude": 1.5205650372592057,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87618116",
+    "name": "Pins-Justaret",
+    "commune": "PINS-JUSTARET",
+    "latitude": 43.478891437246375,
+    "longitude": 1.3997314785203734,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611384",
+    "name": "Auterive",
+    "commune": "AUTERIVE",
+    "latitude": 43.34889289612641,
+    "longitude": 1.4685898311353331,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611079",
+    "name": "Cazères-sur-Garonne",
+    "commune": "CAZERES",
+    "latitude": 43.212444758208804,
+    "longitude": 1.0811467924818112,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611137",
+    "name": "St-Gaudens",
+    "commune": "SAINT-GAUDENS",
+    "latitude": 43.10435529066898,
+    "longitude": 0.7276529139256437,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611194",
+    "name": "Marignac-St-Béat",
+    "commune": "MARIGNAC",
+    "latitude": 42.915465746350215,
+    "longitude": 0.6519831923075106,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611814",
+    "name": "Mérenvielle",
+    "commune": "MERENVIELLE",
+    "latitude": 43.636582768858105,
+    "longitude": 1.1506411700448385,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87497461",
+    "name": "Galliéni-Cancéropole",
+    "commune": "TOULOUSE",
+    "latitude": 43.57213305395909,
+    "longitude": 1.4202021421694861,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611046",
+    "name": "Fauga",
+    "commune": "LE FAUGA",
+    "latitude": 43.402939341163496,
+    "longitude": 1.2815007040872837,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611467",
+    "name": "Colomiers",
+    "commune": "COLOMIERS",
+    "latitude": 43.60348138429502,
+    "longitude": 1.3342927393529707,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87611848",
+    "name": "Montrabé",
+    "commune": "MONTRABE",
+    "latitude": 43.644557135463884,
+    "longitude": 1.5263818605330992,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  },
+  {
+    "id": "87618207",
+    "name": "Montlaur",
+    "commune": "MONTLAUR",
+    "latitude": 43.47652023418666,
+    "longitude": 1.5745317136692156,
+    "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/",
+    "license": "ODbL",
+    "retrieved_at": "2026-10-10"
+  }
+]

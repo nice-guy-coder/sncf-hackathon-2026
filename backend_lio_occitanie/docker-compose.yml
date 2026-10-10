@@ -32,7 +32,7 @@ services:
       - "--port"
       - "8080"
       - "-c"
-      - "${LLM_CTX_SIZE:-2048}"
+      - "${LLM_CTX_SIZE:-8192}"
       - "-t"
       - "${LLM_THREADS:-4}"
       - "-np"

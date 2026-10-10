@@ -6,7 +6,9 @@ export function useDestinations(
   enabled: boolean,
   sessionId: string | null,
   theme: string,
-  maxTrainMinutes: number | null,
+  destinationStation: string | null,
+  radiusKm: number,
+  classLevel: string,
 ) {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(false);
@@ -16,6 +18,13 @@ export function useDestinations(
 
   useEffect(() => {
     if (!enabled) return;
+    if (!destinationStation && !theme) {
+      setDestinations([]);
+      setLoaded(false);
+      setLoading(false);
+      setError("");
+      return;
+    }
     const controller = new AbortController();
     setDestinations([]);
     setLoading(true);
@@ -25,7 +34,11 @@ export function useDestinations(
       {
         session_id: sessionId,
         themes: theme ? [theme] : [],
-        max_train_minutes: maxTrainMinutes,
+        max_train_minutes: null,
+        radius_km: radiusKm,
+        class_level: classLevel || null,
+        destination_station: destinationStation,
+        search_mode: destinationStation ? "station" : "theme",
       },
       controller.signal,
     )
@@ -41,7 +54,15 @@ export function useDestinations(
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [enabled, sessionId, theme, maxTrainMinutes, revision]);
+  }, [
+    enabled,
+    sessionId,
+    theme,
+    destinationStation,
+    radiusKm,
+    classLevel,
+    revision,
+  ]);
 
   return {
     destinations,

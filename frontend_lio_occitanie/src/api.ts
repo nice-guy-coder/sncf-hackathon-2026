@@ -9,7 +9,7 @@ export interface Project {
   themes: string[];
   duration_days: number;
   destination_text: string;
-  selected_accommodation_id: string | null;
+  selected_destination_id: string | null;
   selected_train_number: string | null;
   selected_return_train_number: string | null;
   demo: boolean;
@@ -32,6 +32,26 @@ export interface Destination {
   source_name: string;
   imported_at: string;
   kind: string;
+  description: string;
+  source_url: string;
+  station_relation: string;
+  closest_station: string | null;
+  pedagogical_assessment: {
+    score: number | null;
+    maximum: number;
+    coverage: number;
+    status: "profile" | "theme_only" | "needs_project";
+    notice: string;
+    pedagogical_justification: string;
+    regulatory_argument: string;
+    components: {
+      label: string;
+      points: number;
+      maximum: number;
+      renseigné: boolean;
+    }[];
+    references: { title: string; url: string }[];
+  };
 }
 export interface Train {
   train_number: string;
@@ -71,6 +91,9 @@ export interface Analysis {
     themes: string[];
     missing_fields: string[];
     clarification_question: string | null;
+    analysis_mode: string;
+    analysis_warning?: string;
+    pedagogical_profile: PedagogicalProfile | null;
   };
 }
 export interface Summary {
@@ -103,7 +126,7 @@ export async function api<T>(
   const controller = new AbortController();
   const timeout = window.setTimeout(
     () => controller.abort(),
-    data instanceof FormData ? 180000 : 30000,
+    data instanceof FormData || path.endsWith("/analyze") ? 180000 : 30000,
   );
   try {
     const response = await fetch(`${base}${path}`, {
@@ -152,6 +175,10 @@ export interface DestinationQuery {
   session_id: string | null;
   themes: string[];
   max_train_minutes: number | null;
+  destination_station: string | null;
+  search_mode: "station" | "theme";
+  radius_km: number;
+  class_level: string | null;
 }
 
 export function searchDestinations(
@@ -164,4 +191,40 @@ export function searchDestinations(
     "POST",
     signal,
   );
+}
+
+export interface PedagogicalProfile {
+  contexte: {
+    classe_declaree: string | null;
+    cycle_officiel: string | null;
+    eleves_count: number | null;
+    accompagnateurs_count: number | null;
+  };
+  cadrage_pedagogique: {
+    disciplines: string[];
+    thematiques_programmes: string[];
+    domaines_socle: string[];
+    parcours_educatifs: string[];
+  };
+  objectifs_et_competences: {
+    notions_cles: string[];
+    competences_travaillees: string[];
+    plus_value_terrain_exprimee: string | null;
+  };
+  dispositifs_attendus: { formats_activite: string[]; duree_projet: string };
+  vecteurs_adequation: {
+    mots_cles_patrimoine: string[];
+    mots_cles_activites: string[];
+    territoires_pertinents: string[];
+  };
+}
+
+export interface WalkingRoute {
+  closest_station: string | null;
+  estimated_walking_minutes: number | null;
+  walking_distance_m: number | null;
+  status: "calculated" | "unavailable" | "missing_coordinates";
+  source_url: string;
+  notice: string;
+  calculated_at?: string;
 }

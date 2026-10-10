@@ -15,7 +15,10 @@ from app.models import Accommodation, ReservationRequest, Feedback
 from app.llm import analyze_request
 
 @pytest.fixture
-def client():
+def client(monkeypatch):
+    def offline(text):
+        raise RuntimeError('LLM désactivé pour ces tests de contrat')
+    monkeypatch.setattr('app.main.llm_client.extract_school_request', offline)
     engine = create_engine('sqlite://', connect_args={'check_same_thread': False}, poolclass=StaticPool)
     Base.metadata.create_all(engine)
     with Session(engine) as db:
@@ -29,7 +32,7 @@ def client():
         app.dependency_overrides.clear()
     engine.dispose()
 
-PROJECT = dict(departure_station_text='Toulouse', departure_date='2026-11-15', return_date='2026-11-15', student_count=20, supervisor_count=2, themes=['patrimoine'], destination_text='Carcassonne', selected_accommodation_id='site', demo=True)
+PROJECT = dict(departure_station_text='Toulouse', departure_date='2026-11-15', return_date='2026-11-15', student_count=20, supervisor_count=2, themes=['patrimoine'], destination_text='Carcassonne', selected_destination_id='cite-carcassonne', demo=True)
 
 def create(http):
     response = http.post('/api/v1/sessions')
@@ -40,15 +43,15 @@ def test_structured_session_summary_reservation_and_feedback(client):
     http, db = client
     session_id = create(http)
     assert http.patch(f'/api/v1/sessions/{session_id}', json=PROJECT).status_code == 200
-    summary = http.post('/api/trips/summary', json={'session_id': session_id, 'destination_id': 'site'}).json()
+    summary = http.post('/api/trips/summary', json={'session_id': session_id, 'destination_id': 'cite-carcassonne'}).json()
     assert summary['project']['total_participants'] == 22
     assert summary['selected_train'] is None
-    assert summary['chosen_destination']['name'] == 'Hébergement test'
+    assert summary['chosen_destination']['name'] == 'Cité de Carcassonne'
     response = http.post('/api/prereservations', json={'session_id': session_id, 'contact_name': 'Test Enseignant', 'school_name': 'Collège Test', 'email': 'test@example.fr'})
     assert response.status_code == 200
     assert response.json()['status'] == 'pending'
     request = db.scalar(select(ReservationRequest))
-    assert request.selected_itinerary['destination_id'] == 'site'
+    assert request.selected_itinerary['destination_id'] == 'cite-carcassonne'
     assert request.selected_itinerary['project']['student_count'] == 20
     assert 'Aucun envoi' in response.json()['message']
     assert http.post(f'/api/v1/sessions/{session_id}/feedback', json={'overall_rating': 4}).status_code == 200
@@ -66,10 +69,11 @@ def test_historical_trains_require_opt_in(client):
 
 def test_unknown_distance_and_duration_are_not_invented(client):
     http, _ = client
-    result = http.post('/api/destinations/search', json={'max_train_minutes': 60}).json()
+    result = http.post('/api/destinations/search', json={'max_train_minutes': 60, 'themes': ['patrimoine']}).json()
     assert result['duration_filter_applied'] is False
     assert result['warnings']
-    assert result['destinations'][0]['distance_vol_oiseau_km'] is None
+    assert any(item['distance_vol_oiseau_km'] is None for item in result['destinations'])
+    assert next(item for item in result['destinations'] if item['id'] == 'cite-carcassonne')['distance_vol_oiseau_km'] > 0
     assert result['destinations'][0]['estimated_walking_minutes'] is None
 
 @pytest.mark.parametrize('change', [{'student_count': 50, 'supervisor_count': 1}, {'return_date': '2026-11-14'}, {'departure_date': '2026-02-30'}])

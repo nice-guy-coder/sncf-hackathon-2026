@@ -1,3 +1,5 @@
+import { VisitAssessment, WalkingInfo } from "./VisitAssessment";
+import { AideFaq } from "./AideFaq";
 import lioLogo from "../assets/logo_lio.png";
 import trainPhoto from "../assets/train.jpeg";
 import { useDestinations } from "./useDestinations";
@@ -31,7 +33,7 @@ const initialProject: Project = {
   themes: [],
   duration_days: 1,
   destination_text: "",
-  selected_accommodation_id: null,
+  selected_destination_id: null,
   selected_train_number: null,
   selected_return_train_number: null,
   demo: false,
@@ -54,7 +56,7 @@ const steps = [
 ] as const;
 type Step = (typeof steps)[number];
 type Message = { role: "bot" | "user"; text: string };
-const storageKey = "lio-project-v1";
+const storageKey = "lio-project-v2";
 function loadDraft(): { project: Project; sessionId: string | null } {
   try {
     return (
@@ -107,11 +109,27 @@ export default function App() {
     },
   ]);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
-  const [knownDestination, setKnownDestination] = useState(false);
+  const [knownDestination, setKnownDestination] = useState(
+    Boolean(draft.project.destination_text),
+  );
   const [destination, setDestination] = useState<Destination | null>(null);
-  const [theme, setTheme] = useState("");
-  const [searchMode, setSearchMode] = useState("theme");
-  const [maxMinutes, setMaxMinutes] = useState(120);
+  const [theme, setTheme] = useState(draft.project.themes[0] || "");
+  const [radiusKm, setRadiusKm] = useState(5);
+  const [stationNames, setStationNames] = useState<string[]>([]);
+  useEffect(() => {
+    const controller = new AbortController();
+    api<{ stations: { name: string }[] }>(
+      "/api/stations",
+      undefined,
+      "GET",
+      controller.signal,
+    )
+      .then((data) =>
+        setStationNames(data.stations.map((station) => station.name)),
+      )
+      .catch(() => {});
+    return () => controller.abort();
+  }, []);
   const {
     destinations,
     loading: catalogLoading,
@@ -122,7 +140,9 @@ export default function App() {
     step === "suggestions",
     sessionId,
     theme,
-    searchMode === "duration" ? maxMinutes : null,
+    knownDestination ? project.destination_text : null,
+    radiusKm,
+    project.class_level,
   );
   const [trains, setTrains] = useState<Train[]>([]);
   const [returnTrains, setReturnTrains] = useState<Train[]>([]);
@@ -196,6 +216,8 @@ export default function App() {
     setProject((prev) => ({
       ...prev,
       [key]: value,
+      selected_destination_id:
+        key === "destination_text" ? null : prev.selected_destination_id,
       selected_train_number: null,
       selected_return_train_number: null,
     }));
@@ -246,9 +268,9 @@ export default function App() {
         class_level: data.class_level || "",
         student_count: data.student_count ?? 1,
         supervisor_count: data.supervisor_count ?? 0,
-        themes: data.themes,
+        themes: data.themes.slice(0, 1),
         destination_text: data.destination_text || "",
-        selected_accommodation_id: null,
+        selected_destination_id: null,
         selected_train_number: null,
         selected_return_train_number: null,
       }));
@@ -259,7 +281,9 @@ export default function App() {
         {
           role: "bot",
           text:
-            data.clarification_question ||
+            [data.analysis_warning, data.clarification_question]
+              .filter(Boolean)
+              .join(" ") ||
             "Voici les informations extraites. Vérifiez-les avant de continuer ; la gare de départ doit être confirmée par vous.",
         },
       ]);
@@ -269,6 +293,7 @@ export default function App() {
   }
   function loadDestinations(value = theme) {
     setTheme(value);
+    if (value) change("themes", [value]);
     if (step === "suggestions" && value === theme) reloadCatalog();
     if (step !== "suggestions") go("suggestions");
   }
@@ -309,7 +334,7 @@ export default function App() {
       const id = await saveProject();
       const result = await api<Summary>("/api/trips/summary", {
         session_id: id,
-        destination_id: project.selected_accommodation_id,
+        destination_id: project.selected_destination_id,
         train_number: project.selected_train_number,
       });
       setSummary(result);
@@ -359,17 +384,26 @@ export default function App() {
           <span />
         </button>
         <nav aria-label="Navigation principale" className={menu ? "open" : ""}>
-          <button className="plain" onClick={() => go("projet")}>
+          <button
+            className={`plain ${step === "projet" || step === "formulaire" || step === "chat" ? "active" : ""}`}
+            onClick={() => go("projet")}
+          >
             Mon projet
           </button>
           <button
-            className="plain"
-            onClick={() => void loadDestinations("")}
+            className={`plain ${step === "suggestions" || step === "destination" || step === "detail" ? "active" : ""}`}
+            onClick={() => {
+              setKnownDestination(false);
+              void loadDestinations(project.themes[0] || "");
+            }}
             disabled={busy}
           >
             Découvrir
           </button>
-          <button className="plain" onClick={() => go("aide")}>
+          <button
+            className={`plain ${step === "aide" ? "active" : ""}`}
+            onClick={() => go("aide")}
+          >
             Aide
           </button>
         </nav>
@@ -602,23 +636,23 @@ export default function App() {
                       placeholder="5e (Collège)"
                     />
                   </Field>
-                  <Field label="Thème ou objectif pédagogique *">
-                    <input
+                  <Field label="Thème pédagogique (si la destination est inconnue)">
+                    <select
                       className="input"
-                      required
-                      maxLength={300}
-                      value={project.themes.join(", ")}
+                      required={!knownDestination}
+                      value={project.themes[0] || ""}
                       onChange={(e) =>
-                        change(
-                          "themes",
-                          e.target.value
-                            .split(",")
-                            .map((t) => t.trim())
-                            .filter(Boolean),
-                        )
+                        change("themes", e.target.value ? [e.target.value] : [])
                       }
-                      placeholder="Moyen Âge"
-                    />
+                    >
+                      <option value="">Choisir un thème</option>
+                      <option value="patrimoine">Histoire et patrimoine</option>
+                      <option value="sciences">Sciences et technologies</option>
+                      <option value="nature">Nature et biodiversité</option>
+                      <option value="art et culture">Arts et culture</option>
+                      <option value="mer et littoral">Mer et littoral</option>
+                      <option value="sport">Sport et santé</option>
+                    </select>
                   </Field>
                   <div className="grid2">
                     <Field label="Nombre d’élèves *">
@@ -753,84 +787,125 @@ export default function App() {
                       </span>
                     </button>
                   </div>
+                  <datalist id="destination-stations">
+                    {stationNames.map((name) => (
+                      <option key={name} value={name} />
+                    ))}
+                  </datalist>
+                  {knownDestination && (
+                    <Field label="Gare ou ville de destination">
+                      <input
+                        className="input"
+                        value={project.destination_text}
+                        list="destination-stations"
+                        placeholder="Carcassonne, Nîmes, Albi…"
+                        onChange={(e) =>
+                          change("destination_text", e.target.value)
+                        }
+                      />
+                    </Field>
+                  )}
                   <Actions
                     back={() => go("formulaire")}
+                    disabled={
+                      knownDestination &&
+                      project.destination_text.trim().length < 2
+                    }
                     next={() => {
-                      if (knownDestination) {
-                        setProject((prev) => ({
-                          ...prev,
-                          selected_accommodation_id: null,
-                        }));
-                        go("recherche");
-                      } else void loadDestinations("");
+                      setDestination(null);
+                      setProject((prev) => ({
+                        ...prev,
+                        selected_destination_id: null,
+                        selected_train_number: null,
+                        selected_return_train_number: null,
+                        destination_text: knownDestination
+                          ? prev.destination_text
+                          : "",
+                      }));
+                      loadDestinations(project.themes[0] || "");
                     }}
                   />
                 </>
               )}
               {step === "suggestions" && (
                 <>
-                  <Heading eyebrow="Destination inconnue">
-                    Découvrez des destinations adaptées à votre projet
+                  <Heading
+                    eyebrow={
+                      knownDestination
+                        ? "Destination connue"
+                        : "Destination inconnue"
+                    }
+                  >
+                    {knownDestination
+                      ? `Attractions autour de ${project.destination_text}`
+                      : "Choisissez un thème pour découvrir des attractions"}
                   </Heading>
-                  <div className="tabs" aria-label="Mode de recherche">
-                    <button
-                      className={`tab plain ${searchMode === "theme" ? "on" : ""}`}
-                      onClick={() => setSearchMode("theme")}
-                    >
-                      Par thème
-                    </button>
-                    <button
-                      className={`tab plain ${searchMode === "duration" ? "on" : ""}`}
-                      onClick={() => setSearchMode("duration")}
-                    >
-                      Par temps de trajet
-                    </button>
-                  </div>
-                  {searchMode === "theme" ? (
-                    <div className="chiprow">
+                  <datalist id="search-stations">
+                    {stationNames.map((name) => (
+                      <option key={name} value={name} />
+                    ))}
+                  </datalist>
+                  {knownDestination ? (
+                    <div className="grid2">
+                      <Field label="Gare ou ville de destination">
+                        <input
+                          className="input"
+                          value={project.destination_text}
+                          list="search-stations"
+                          onChange={(e) =>
+                            change("destination_text", e.target.value)
+                          }
+                        />
+                      </Field>
+                      <Field label="Rayon autour de la gare (km à vol d’oiseau)">
+                        <input
+                          className="input"
+                          type="number"
+                          min={0.1}
+                          max={100}
+                          step={0.5}
+                          value={radiusKm}
+                          onChange={(e) =>
+                            setRadiusKm(Number(e.target.value) || 5)
+                          }
+                        />
+                      </Field>
+                    </div>
+                  ) : (
+                    <div className="chiprow" aria-label="Thème pédagogique">
                       {[
-                        ["Tous", ""],
-                        ["Histoire", "patrimoine"],
+                        ["Histoire et patrimoine", "patrimoine"],
                         ["Sciences", "sciences"],
                         ["Nature", "nature"],
-                        ["Culture", "culture"],
-                        ["Art", "art"],
+                        ["Arts et culture", "art et culture"],
+                        ["Mer et littoral", "mer et littoral"],
+                        ["Sport et santé", "sport"],
                       ].map(([label, value]) => (
                         <button
-                          key={label}
+                          key={value}
                           className={`chip ${theme === value ? "on" : ""}`}
                           aria-pressed={theme === value}
-                          onClick={() => void loadDestinations(value)}
+                          onClick={() => loadDestinations(value)}
                         >
                           {label}
                         </button>
                       ))}
                     </div>
-                  ) : (
-                    <>
-                      <Field label="Durée maximale en train (minutes)">
-                        <input
-                          className="input"
-                          type="number"
-                          min={15}
-                          max={600}
-                          value={maxMinutes}
-                          onChange={(e) =>
-                            setMaxMinutes(Number(e.target.value))
-                          }
-                        />
-                      </Field>
-                      <p className="notice">
-                        Cette contrainte ne peut pas être appliquée sans
-                        horaires actualisés. Les hébergements ci-dessous ne sont
-                        pas filtrés par durée.
-                      </p>
-                    </>
+                  )}
+                  {!knownDestination && !theme && (
+                    <p className="notice">
+                      Sélectionnez un seul thème pédagogique pour afficher les
+                      suggestions.
+                    </p>
                   )}
                   <p className="muted catalog-note">
-                    Découvrez les hébergements scolaires en Occitanie. Les gares
-                    indiquées, les activités proches et l’accès à pied restent à
-                    vérifier.
+                    {knownDestination
+                      ? "Sites de visite dans le rayon choisi autour de la gare. "
+                      : "Attractions correspondant au thème choisi. "}
+                    Les distances sont à vol d’oiseau ; itinéraire et accueil
+                    des groupes sont à confirmer. Les sites sans coordonnées
+                    vérifiées ne figurent pas dans la recherche autour d’une
+                    gare.
                   </p>
                   {catalogLoading && (
                     <p className="notice" role="status">
@@ -849,16 +924,21 @@ export default function App() {
                   )}
                   <div className="destination-grid">
                     {destinations.map((item) => (
-                      <button
-                        className="card destination-card"
-                        key={item.id}
-                        onClick={() => {
-                          setDestination(item);
-                          go("detail");
-                        }}
-                      >
-                        <div className="thumb" aria-hidden="true" />
-                        <div>
+                      <article className="card destination-card" key={item.id}>
+                        <button
+                          className="plain visit-select"
+                          onClick={() => {
+                            setDestination(item);
+                            go("detail");
+                          }}
+                          aria-label={`Voir le lieu : ${item.name}`}
+                        >
+                          <div
+                            className="thumb attraction-illustration"
+                            aria-hidden="true"
+                          >
+                            <Icon symbol="🧭" />
+                          </div>
                           <b>{item.name}</b>
                           <span className="badge">
                             {item.commune || "Occitanie"}
@@ -866,24 +946,21 @@ export default function App() {
                           <p className="muted">
                             {item.themes || "Thématiques non renseignées"}
                           </p>
-                          <span className="muted">
-                            {item.capacity !== null
-                              ? `${item.capacity} places d’hébergement`
-                              : "Capacité non renseignée"}
+                          <span className="text-button">
+                            Voir les détails →
                           </span>
-                        </div>
-                      </button>
+                        </button>
+                        <WalkingInfo destination={item} />
+                        <VisitAssessment destination={item} />
+                      </article>
                     ))}
                   </div>
                   {catalogLoaded && !destinations.length && (
                     <div className="card">
-                      <p>Aucun hébergement pour ce filtre.</p>
-                      <button
-                        className="btn ghost"
-                        onClick={() => void loadDestinations("")}
-                      >
-                        Voir tous les hébergements
-                      </button>
+                      <p>
+                        Aucune attraction dans ce catalogue pour cette
+                        recherche.
+                      </p>
                     </div>
                   )}
                   <div className="row-btns">
@@ -898,37 +975,62 @@ export default function App() {
               )}
               {step === "detail" && destination && (
                 <>
-                  <div className="thumbrow" aria-hidden="true">
-                    {[1, 2, 3, 4].map((n) => (
-                      <div className="thumb" key={n} />
-                    ))}
+                  {analysis?.extracted_data.pedagogical_profile && (
+                    <div className="card pedagogical-profile">
+                      <h2 className="h3">Cadrage pédagogique du projet</h2>
+                      <p>
+                        {
+                          analysis.extracted_data.pedagogical_profile.contexte
+                            .cycle_officiel
+                        }{" "}
+                        ·{" "}
+                        {analysis.extracted_data.pedagogical_profile.cadrage_pedagogique.disciplines.join(
+                          ", ",
+                        )}
+                      </p>
+                      <p>
+                        Objectifs :{" "}
+                        {analysis.extracted_data.pedagogical_profile.objectifs_et_competences.competences_travaillees.join(
+                          ", ",
+                        ) || "À préciser"}
+                      </p>
+                      <p>
+                        Parcours :{" "}
+                        {analysis.extracted_data.pedagogical_profile.cadrage_pedagogique.parcours_educatifs.join(
+                          ", ",
+                        ) || "À préciser"}
+                      </p>
+                    </div>
+                  )}
+                  <div className="attraction-illustration" aria-hidden="true">
+                    <Icon symbol="🧭" />
                   </div>
-                  <Heading eyebrow="Hébergement scolaire">
+                  <Heading eyebrow="Attraction touristique">
                     {destination.name}
                   </Heading>
                   <span className="badge">
                     {destination.themes || "Thèmes à préciser"}
                   </span>
+                  <WalkingInfo destination={destination} />
+                  <VisitAssessment destination={destination} />
                   <div className="stack details">
                     <Bullet icon="📍">
                       {destination.commune} · {destination.department}
                     </Bullet>
                     <Bullet icon="🏁">
-                      Gare provisoire indiquée dans la source :{" "}
+                      {destination.distance_vol_oiseau_km !== null
+                        ? "Gare de référence : "
+                        : "Gare de rattachement indicative : "}
                       {destination.nearest_station || "Non renseignée"}
                     </Bullet>
                     <Bullet icon="🚶">
                       {destination.distance_vol_oiseau_km !== null
-                        ? `${destination.distance_vol_oiseau_km} km à vol d’oiseau ; itinéraire et temps de marche non vérifiés.`
+                        ? `${destination.distance_vol_oiseau_km} km à vol d’oiseau depuis la gare de référence. Le trajet piéton depuis la gare la plus proche est indiqué ci-dessus.`
                         : "Distance et temps de marche non renseignés."}
                     </Bullet>
                     <Bullet icon="🎒">
-                      Activités à proximité :{" "}
+                      Intérêt pédagogique :{" "}
                       {destination.nearby_activities || "Non renseignées"}
-                    </Bullet>
-                    <Bullet icon="👥">
-                      Capacité d’hébergement :{" "}
-                      {destination.capacity ?? "Non renseignée"}
                     </Bullet>
                     <Bullet icon="♿">
                       Accessibilité déclarée :{" "}
@@ -942,11 +1044,11 @@ export default function App() {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Consulter le site de la structure ↗
+                      Consulter la source touristique ↗
                     </a>
                   )}
                   <p className="muted source">
-                    Catalogue d’hébergements scolaires · Mis à jour le{" "}
+                    Catalogue d’attractions · Mis à jour le{" "}
                     {new Date(destination.imported_at).toLocaleDateString(
                       "fr-FR",
                     )}
@@ -956,7 +1058,7 @@ export default function App() {
                     next={() => {
                       setProject((prev) => ({
                         ...prev,
-                        selected_accommodation_id: destination.id,
+                        selected_destination_id: destination.id,
                         destination_text: destination.nearest_station || "",
                         selected_train_number: null,
                         selected_return_train_number: null,
@@ -1209,7 +1311,12 @@ export default function App() {
                 <>
                   <span className="eyebrow">Récapitulatif de votre projet</span>
                   <div className="grid2 recap">
-                    <div className="thumb" aria-hidden="true" />
+                    <div
+                      className="thumb attraction-illustration"
+                      aria-hidden="true"
+                    >
+                      <Icon symbol="🧭" />
+                    </div>
                     <div>
                       <h1 className="h3">
                         {summary.chosen_destination.name ||
@@ -1460,44 +1567,7 @@ export default function App() {
                 </>
               )}
               {step === "aide" && (
-                <>
-                  <Heading eyebrow="Copilote liO">
-                    Préparer votre sortie en confiance
-                  </Heading>
-                  <div className="stack">
-                    <div className="card">
-                      <h2 className="h3">Décrire votre projet</h2>
-                      <p>
-                        Utilisez le chat, le micro ou le formulaire. Confirmez
-                        la gare de départ, la date et les effectifs. Un groupe
-                        est limité à 50 voyageurs par train.
-                      </p>
-                    </div>
-                    <div className="card">
-                      <h2 className="h3">Comprendre les données</h2>
-                      <p>
-                        Les suggestions présentent des hébergements scolaires en
-                        Occitanie. Les distances sont à vol d’oiseau. La
-                        recherche historique est une démonstration : dates de
-                        circulation, places réelles, autorisations groupes et
-                        accès restent à vérifier.
-                      </p>
-                    </div>
-                    <div className="card">
-                      <h2 className="h3">Pré-réserver</h2>
-                      <p>
-                        Les demandes sont conservées dans le prototype. Une
-                        confirmation officielle nécessite une connexion au
-                        service SNCF liO. Aucun email n’est envoyé.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="row-btns">
-                    <button className="btn" onClick={() => go("projet")}>
-                      Commencer mon projet →
-                    </button>
-                  </div>
-                </>
+                <AideFaq onStartProject={() => go("projet")} />
               )}
             </>
           )}

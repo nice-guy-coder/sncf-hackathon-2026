@@ -12,7 +12,7 @@ async function fillProject(page: Page) {
     .getByRole("button", { name: "Remplir le formulaire", exact: true })
     .click();
   await page.getByLabel("Niveau de classe").fill("5e");
-  await page.getByLabel("Thème ou objectif").fill("Patrimoine");
+  await page.getByLabel("Thème pédagogique").selectOption("patrimoine");
   await page.getByLabel("Nombre d’élèves").fill("20");
   await page.getByLabel("Nombre d’accompagnateurs").fill("2");
   await page.getByLabel("Date précise").fill("2026-11-15");
@@ -37,9 +37,24 @@ test("projet connu, aller/retour, dossier et retour d’expérience", async ({
     fullPage: true,
   });
   await fillProject(page);
-  await page.getByRole("button", { name: /^📍 Oui/ }).click();
+  await page.getByRole("button", { name: /^Oui/ }).click();
+  await page.getByLabel("Gare ou ville de destination").fill("Carcassonne");
   await page.getByRole("button", { name: "Continuer →", exact: true }).click();
-  await page.getByLabel("Arrivée").fill("Carcassonne");
+  await expect(
+    page.getByRole("heading", { name: "Attractions autour de Carcassonne" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Sciences", exact: true }),
+  ).toHaveCount(0);
+  await page
+    .locator(".destination-card")
+    .filter({ hasText: "Cité de Carcassonne" })
+    .locator(".visit-select")
+    .click();
+  await page
+    .getByRole("button", { name: "Voir les trains pour cette destination" })
+    .click();
+  await expect(page.getByLabel("Arrivée")).toHaveValue("Carcassonne");
   await page
     .getByRole("button", { name: "Rechercher les trains", exact: true })
     .click();
@@ -100,17 +115,15 @@ test("destination inconnue, filtres et détails réels", async ({ page }) => {
   await fillProject(page);
   await page.getByRole("button", { name: "Continuer →", exact: true }).click();
   await expect(page.locator(".destination-card").first()).toBeVisible();
-  await page.getByRole("button", { name: "Histoire", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Histoire et patrimoine", exact: true })
+    .click();
   await expect(page.locator(".destination-card").first()).toBeVisible();
   await layout(page);
-  await page.getByRole("button", { name: "Par temps de trajet" }).click();
+  await page.locator(".destination-card .visit-select").first().click();
+  await expect(page.getByText(/km à vol d’oiseau/).first()).toBeVisible();
   await expect(
-    page.getByText(/Cette contrainte ne peut pas être appliquée/),
-  ).toBeVisible();
-  await page.locator(".destination-card").first().click();
-  await expect(page.getByText(/km à vol d’oiseau/)).toBeVisible();
-  await expect(
-    page.getByText(/Catalogue d’hébergements scolaires · Mis à jour/),
+    page.getByText(/Catalogue d’attractions · Mis à jour/),
   ).toBeVisible();
   await layout(page);
   await page
@@ -167,6 +180,8 @@ test("le lien suggestions et son rechargement interrogent l’API", async ({
       response.request().method() === "POST",
   );
   await page.goto("/#suggestions");
+  await expect(page.locator(".destination-card")).toHaveCount(0);
+  await page.getByRole("button", { name: "Sciences", exact: true }).click();
   const response = await responsePromise;
   expect(response.status()).toBe(200);
   const result = await response.json();
@@ -199,6 +214,7 @@ test("une panne de l’API n’affiche aucun lieu de secours et permet de réess
     route.abort("failed"),
   );
   await page.goto("/#suggestions");
+  await page.getByRole("button", { name: "Sciences", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText(
     "Impossible de charger les lieux",
   );
@@ -207,4 +223,84 @@ test("une panne de l’API n’affiche aucun lieu de secours et permet de réess
   await page.getByRole("button", { name: "Réessayer", exact: true }).click();
   await expect(page.locator(".destination-card").first()).toBeVisible();
   await expect(page.getByRole("alert")).toHaveCount(0);
+});
+
+test("chaque attraction affiche son score, son argumentaire et le trajet piéton", async ({
+  page,
+}, info) => {
+  await page.goto("/#suggestions");
+  await page
+    .getByRole("button", { name: "Histoire et patrimoine", exact: true })
+    .click();
+  const card = page.locator(".destination-card").filter({
+    has: page.getByRole("button", {
+      name: "Voir le lieu : Cité de Carcassonne",
+      exact: true,
+    }),
+  });
+  await expect(
+    card.getByText("50/100 · Adéquation pédagogique", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    card.getByRole("heading", { name: "Intérêt pédagogique", exact: true }),
+  ).toBeVisible();
+  await expect(card.locator(".regulatory-argument p")).toContainText(
+    "circulaire du 16 juillet 2024",
+  );
+  await expect(card.getByText("40 min à pied", { exact: true })).toBeVisible();
+  await expect(
+    card.getByRole("link", { name: "Circulaire du 16 juillet 2024" }),
+  ).toHaveAttribute(
+    "href",
+    "https://www.education.gouv.fr/bo/2024/Hebdo30/MENE2407159C",
+  );
+  await card.getByText("Comprendre le score", { exact: true }).click();
+  await expect(
+    card.getByText("Disciplines : critère non renseigné", { exact: true }),
+  ).toBeVisible();
+  const assessmentBox = await card.locator(".visit-assessment").boundingBox();
+  expect(assessmentBox?.width).toBeGreaterThan(250);
+  await card.screenshot({
+    path: `/tmp/lio-visit-assessment-${info.project.name}.png`,
+  });
+  await card
+    .getByRole("button", {
+      name: "Voir le lieu : Cité de Carcassonne",
+      exact: true,
+    })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Cité de Carcassonne", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText("40 min à pied", { exact: true })).toBeVisible();
+  await layout(page);
+});
+
+test("une panne du calcul piéton garde le score et permet de réessayer", async ({
+  page,
+}) => {
+  await page.route("**/api/destinations/cite-carcassonne/walking", (route) =>
+    route.abort("failed"),
+  );
+  await page.goto("/#suggestions");
+  await page
+    .getByRole("button", { name: "Histoire et patrimoine", exact: true })
+    .click();
+  const card = page.locator(".destination-card").filter({
+    has: page.getByRole("button", {
+      name: "Voir le lieu : Cité de Carcassonne",
+      exact: true,
+    }),
+  });
+  await expect(
+    card.getByText("Temps de marche indisponible.", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    card.getByText("50/100 · Adéquation pédagogique", { exact: true }),
+  ).toBeVisible();
+  await page.unroute("**/api/destinations/cite-carcassonne/walking");
+  await card
+    .getByRole("button", { name: "Réessayer le calcul à pied" })
+    .click();
+  await expect(card.getByText("40 min à pied", { exact: true })).toBeVisible();
 });

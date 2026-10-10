@@ -13,13 +13,16 @@ from sqlalchemy import select, or_
 
 from .db import Base, engine, get_db
 from .models import Accommodation, ProjectSession, ReservationRequest, Feedback
-from .llm import analyze_request, TravelExtractor, LLMClient
+from .llm import LLMClient
 from .train_engine import find_train_options
 from .stt import transcribe_audio_bytes
+from .attractions import attraction_by_id, search_attractions, stations, canonical_theme
+from .llm.school import analyze_school_request
+from .visit_pedagogy import evaluate_visit
+from .walking import walking_route, closest_station
 
 # Initialisation du client LLM et de l'extracteur de voyage
 llm_client = LLMClient()
-travel_extractor = TravelExtractor(llm_client)
 
 TEST_FRONTEND = Path(__file__).resolve().parent.parent / "test_frontend" / "index.html"
 
@@ -56,10 +59,14 @@ class TripAnalyzeIn(BaseModel):
 
 class DestinationSearchIn(BaseModel):
     session_id: Optional[str] = None
-    themes: List[str] = []
+    themes: List[str] = Field(default_factory=list)
     commune: Optional[str] = None
     department: Optional[str] = None
     max_train_minutes: Optional[int] = None
+    destination_station: Optional[str] = Field(None, min_length=2, max_length=250)
+    search_mode: Optional[str] = Field(None, pattern="^(station|theme)$")
+    radius_km: float = Field(5, ge=0.1, le=100)
+    class_level: Optional[str] = Field(None, max_length=50)
 
 class TrainSearchIn(BaseModel):
     session_id: Optional[str] = None
@@ -103,7 +110,7 @@ class SessionUpdate(BaseModel):
     duration_days: int = Field(1, ge=1, le=30)
     departure_place: Optional[str] = Field(None, max_length=300)
     destination_text: Optional[str] = Field(None, max_length=300)
-    selected_accommodation_id: Optional[str] = None
+    selected_destination_id: Optional[str] = None
     selected_train_number: Optional[str] = None
     selected_return_train_number: Optional[str] = None
     demo: bool = False
@@ -113,7 +120,7 @@ def session_payload(session_obj):
     return {
         "session_id": session_obj.id, "status": session_obj.status,
         "project": session_obj.structured_request or {},
-        "selected_accommodation_id": session_obj.selected_accommodation_id,
+        "selected_destination_id": (session_obj.structured_request or {}).get("selected_destination_id"),
         "selected_train_number": session_obj.selected_train_number,
     }
 
@@ -144,8 +151,10 @@ def update_session(session_id: str, body: SessionUpdate, db: Session = Depends(g
         raise HTTPException(422, detail="La date de retour précède le départ.")
     if body.student_count + body.supervisor_count > 50:
         raise HTTPException(422, detail="Un groupe liO ne peut pas dépasser 50 voyageurs par train.")
-    if body.selected_accommodation_id and not db.get(Accommodation, body.selected_accommodation_id):
-        raise HTTPException(404, detail="Hébergement non trouvé")
+    if len(body.themes) > 1:
+        raise HTTPException(422, detail="Choisissez un seul thème pédagogique par projet.")
+    if body.selected_destination_id and not attraction_by_id(body.selected_destination_id):
+        raise HTTPException(404, detail="Attraction non trouvée")
     data = body.model_dump(mode="json")
     previous = session_obj.structured_request or {}
     # Les changements de trajet rendent les anciennes sélections caduques.
@@ -170,8 +179,11 @@ def update_session(session_id: str, body: SessionUpdate, db: Session = Depends(g
     if len(selected) == 2 and (body.return_date or body.departure_date) == body.departure_date:
         if selected["selected_return_train_number"]["departure_time"] <= selected["selected_train_number"]["arrival_time"]:
             raise HTTPException(422, detail="Le retour doit partir après l'arrivée du train aller.")
-    for key in ("departure_station_text", "departure_date", "class_level", "student_count", "supervisor_count", "destination_text", "selected_accommodation_id", "selected_train_number"):
+    for key in ("departure_station_text", "departure_date", "class_level", "student_count", "supervisor_count", "destination_text", "selected_train_number"):
         setattr(session_obj, key, data[key])
+    data["pedagogical_profile"] = previous.get("pedagogical_profile")
+    if data["pedagogical_profile"] and any(previous.get(key) != data.get(key) for key in ("class_level", "themes")):
+        data["pedagogical_profile"] = None
     session_obj.structured_request = data
     session_obj.status = "ready_for_destinations"
     db.commit()
@@ -201,7 +213,7 @@ def analyze_trip(body: TripAnalyzeIn, db: Session = Depends(get_db)):
         )
         db.add(session_obj)
 
-    analysis = analyze_request(session_obj.original_request)
+    analysis = analyze_school_request(session_obj.original_request, llm_client)
     session_obj.structured_request = analysis
     session_obj.departure_station_text = analysis.get("departure_station_text")
     session_obj.departure_date = analysis.get("departure_date")
@@ -221,6 +233,13 @@ def analyze_trip(body: TripAnalyzeIn, db: Session = Depends(get_db)):
         "extracted_data": analysis,
         "next_step": "destinations_search" if not analysis.get("missing_fields") else "clarification"
     }
+
+def postprocess_voice(analysis):
+    from .llm.schemas import TravelInfo
+    return TravelInfo(nombre_personnes=analysis["total_participants"] or None,
+                      date_depart=analysis["departure_date"], date_retour=analysis.get("return_date"),
+                      lieu_depart=analysis["departure_station_text"], destination=analysis["destination_text"],
+                      destination_connue=analysis["destination_known"])
 
 @app.post("/api/analyzeVoice", summary="Analyse audio : WhisperAI local (audio -> texte) puis LLM local (texte -> catégories JSON)")
 def analyze_voice(
@@ -257,7 +276,8 @@ def analyze_voice(
         }
 
     # Appel au modèle LLM local pour classifier et extraire les catégories en JSON
-    travel_info = travel_extractor.extract(transcription)
+    analysis = analyze_school_request(transcription, llm_client)
+    travel_info = postprocess_voice(analysis)
 
     return {
         "transcription": transcription,
@@ -268,57 +288,58 @@ def analyze_voice(
         "destination": travel_info.destination,
         "destination_connue": travel_info.destination_connue,
         "speech_detected": True,
+        "extracted_data": analysis,
+        "pedagogical_profile": analysis["pedagogical_profile"],
+        "analysis_mode": analysis["analysis_mode"],
     }
 
 
 # ---------------------------------------------------------
 # 2. Recherche et suggestions de destinations
 # ---------------------------------------------------------
+@app.get("/api/stations", summary="Gares voyageurs géolocalisées d’Occitanie")
+def list_stations():
+    return {"stations": stations(), "source_url": "https://data.sncf.com/explore/dataset/liste-des-gares/", "license": "ODbL"}
+
+@app.get("/api/destinations/{destination_id}/walking", summary="Marche depuis la gare la plus proche")
+def destination_walking(destination_id: str):
+    item = attraction_by_id(destination_id)
+    if not item:
+        raise HTTPException(404, detail="Attraction non trouvée")
+    return walking_route(item)
+
 @app.post("/api/destinations/search", summary="Recherche de destinations adaptées au projet")
 def search_destinations(body: DestinationSearchIn, db: Session = Depends(get_db)):
-    """
-    Propose des hébergements et sites touristiques d'Occitanie reliés au réseau liO.
-    Calcule le temps piéton gare -> site et vérifie l'accessibilité scolaire.
-    """
-    stmt = select(Accommodation)
-    if body.themes:
-        stmt = stmt.where(or_(*[Accommodation.themes_raw.ilike(f"%{t}%") for t in body.themes]))
-    if body.commune:
-        stmt = stmt.where(Accommodation.commune.ilike(f"%{body.commune}%"))
-    if body.department:
-        stmt = stmt.where(Accommodation.department.ilike(f"%{body.department}%"))
-
-    rows = db.scalars(stmt.limit(100)).all()
-
-    items = []
-    for acc in rows:
-        dist_km = acc.straight_line_distance_km
-
-        items.append({
-            "id": acc.id,
-            "name": acc.name,
-            "commune": acc.commune,
-            "department": acc.department,
-            "themes": acc.themes_raw,
-            "nearest_station": acc.nearest_station_raw,
-            "distance_vol_oiseau_km": dist_km,
-            "estimated_walking_minutes": None,
-            "accessibility_verdict": "Accès piéton non vérifié ; distance à vol d'oiseau uniquement.",
-            "capacity": acc.total_capacity,
-            "nearby_activities": acc.nearby_sites_raw,
-            "website": acc.website_url,
-            "nature_label": acc.nature_label,
-            "accessible_handicap": acc.accessible_handicap,
-            "reference_tariff": acc.reference_tariff,
-            "source_name": acc.source_name,
-            "imported_at": acc.imported_at.replace(tzinfo=timezone.utc).isoformat(),
-            "kind": "accommodation",
-        })
-
+    session_obj = db.get(ProjectSession, body.session_id) if body.session_id else None
+    if body.session_id and not session_obj:
+        raise HTTPException(404, detail="Session non trouvée")
+    project = (session_obj.structured_request or {}) if session_obj else {}
+    station = None if body.search_mode == "theme" else body.destination_station or (session_obj.destination_text if session_obj else None)
+    if body.search_mode == "station" and not station:
+        raise HTTPException(422, detail="Renseignez la gare de destination.")
+    themes = body.themes or project.get("themes", [])
+    if not station and len(themes) != 1:
+        raise HTTPException(422, detail="Destination inconnue : choisissez un seul thème pédagogique.")
+    if not station and not canonical_theme(themes[0]):
+        raise HTTPException(422, detail="Thème pédagogique non reconnu.")
+    try:
+        items = search_attractions(station=station, theme=themes[0] if themes else None,
+                                  commune=body.commune, department=body.department, radius_km=body.radius_km)
+    except ValueError as exc:
+        raise HTTPException(422, detail=str(exc)) from exc
+    context = {**project, "themes": themes, "class_level": body.class_level or project.get("class_level")}
+    if ((body.themes and body.themes != project.get("themes", []))
+            or (body.class_level and body.class_level != project.get("class_level"))):
+        context["pedagogical_profile"] = None
+    for item in items:
+        item["pedagogical_assessment"] = evaluate_visit(item, context)
+        nearest = closest_station(item)
+        item["closest_station"] = nearest["name"] if nearest else None
     return {
-        "count": len(items),
-        "destinations": items,
-        "advice": "Catalogue d'hébergements scolaires fourni ; les sites proches ne constituent pas un catalogue de visites vérifiées.",
+        "count": len(items), "destinations": items,
+        "search_mode": "station" if station else "theme",
+        "radius_km": body.radius_km if station else None,
+        "advice": "Distance à vol d’oiseau depuis les coordonnées officielles des sites et des gares. Accès et accueil scolaire à confirmer.",
         "duration_filter_applied": False,
         "warnings": ["Le filtre de durée n'est pas vérifiable sans horaires actualisés."] if body.max_train_minutes else [],
     }
@@ -406,12 +427,15 @@ def trip_summary(body: TripSummaryIn, db: Session = Depends(get_db)):
     if not session_obj:
         raise HTTPException(404, detail="Session non trouvée")
 
-    destination_id = body.destination_id or session_obj.selected_accommodation_id
-    acc = db.get(Accommodation, destination_id) if destination_id else None
+    destination_id = body.destination_id or (session_obj.structured_request or {}).get("selected_destination_id")
+    acc = attraction_by_id(destination_id) if destination_id else None
     if destination_id and not acc:
-        raise HTTPException(404, detail="Hébergement non trouvé")
+        raise HTTPException(404, detail="Attraction non trouvée")
+    saved_destination = (session_obj.structured_request or {}).get("selected_destination_id")
+    if body.destination_id and saved_destination and body.destination_id != saved_destination:
+        raise HTTPException(422, detail="L'attraction doit être sélectionnée dans le projet avant le récapitulatif.")
     if body.destination_id:
-        session_obj.selected_accommodation_id = body.destination_id
+        session_obj.structured_request = {**(session_obj.structured_request or {}), "selected_destination_id": body.destination_id}
     if body.train_number and body.train_number != session_obj.selected_train_number:
         raise HTTPException(422, detail="Le train doit être sélectionné et validé dans la session.")
     db.commit()
@@ -430,13 +454,14 @@ def trip_summary(body: TripSummaryIn, db: Session = Depends(get_db)):
             "return_date": project.get("return_date"),
             "duration_days": project.get("duration_days", 1),
             "departure_place": project.get("departure_place"),
-            "themes": project.get("themes", [])
+            "themes": project.get("themes", []),
+            "pedagogical_profile": project.get("pedagogical_profile"),
         },
         "chosen_destination": {
-            "name": acc.name if acc else session_obj.destination_text,
-            "commune": acc.commune if acc else None,
-            "department": acc.department if acc else None,
-            "nearest_station": acc.nearest_station_raw if acc else None
+            "name": acc["name"] if acc else session_obj.destination_text,
+            "commune": acc["commune"] if acc else None,
+            "department": acc["department"] if acc else None,
+            "nearest_station": acc["nearest_station"] if acc else None
         },
         "selected_train": session_obj.selected_train_number,
         "selected_return_train": project.get("selected_return_train_number"),
@@ -470,7 +495,7 @@ def create_prereservation(body: PreReservationIn, db: Session = Depends(get_db))
         status="pending",
         selected_itinerary={
             "project": session_obj.structured_request,
-            "destination_id": session_obj.selected_accommodation_id,
+            "destination_id": (session_obj.structured_request or {}).get("selected_destination_id"),
             "train_number": session_obj.selected_train_number,
             "data_status": "historical_demo" if (session_obj.structured_request or {}).get("demo") else "unverified",
         },

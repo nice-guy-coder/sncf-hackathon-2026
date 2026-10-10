@@ -1,0 +1,162 @@
+{
+  "87615286:43.21798496729815,2.3477547806381045:43.2070486,2.36313342": {
+    "closest_station": "Carcassonne",
+    "estimated_walking_minutes": 40,
+    "walking_distance_m": 2385,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-05",
+    "calculated_at": "2026-10-10T13:17:41.844888+00:00"
+  },
+  "87775007:43.83252873427386,4.3662182724514835:43.834225,4.359362": {
+    "closest_station": "Nîmes",
+    "estimated_walking_minutes": 12,
+    "walking_distance_m": 685,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-08",
+    "calculated_at": "2026-10-10T13:17:42.069840+00:00"
+  },
+  "87775007:43.83252873427386,4.3662182724514835:43.83815,4.35599": {
+    "closest_station": "Nîmes",
+    "estimated_walking_minutes": 19,
+    "walking_distance_m": 1116,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-07",
+    "calculated_at": "2026-10-10T13:17:42.206207+00:00"
+  },
+  "87775064:43.826340789328576,4.479351522598789:43.947609,4.535022": {
+    "closest_station": "Manduel-Redessan",
+    "estimated_walking_minutes": 287,
+    "walking_distance_m": 17176,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-07",
+    "calculated_at": "2026-10-10T13:17:42.508769+00:00"
+  },
+  "87615005:43.922346996567065,2.1377846403694747:43.928496,2.142364": {
+    "closest_station": "Albi",
+    "estimated_walking_minutes": 17,
+    "walking_distance_m": 1001,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-09",
+    "calculated_at": "2026-10-10T13:17:42.701549+00:00"
+  },
+  "87615005:43.922346996567065,2.1377846403694747:43.929157,2.143237": {
+    "closest_station": "Albi",
+    "estimated_walking_minutes": 20,
+    "walking_distance_m": 1145,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-07",
+    "calculated_at": "2026-10-10T13:17:43.133042+00:00"
+  },
+  "87594754:44.92171661680335,1.7842626560329264:44.859146,1.750443": {
+    "closest_station": "Puybrun",
+    "estimated_walking_minutes": 208,
+    "walking_distance_m": 12486,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-05",
+    "calculated_at": "2026-10-10T13:17:43.272661+00:00"
+  },
+  "87764555:44.253477368876055,4.6431933621606:44.258171,4.340065": {
+    "closest_station": "Pont-St-Esprit",
+    "estimated_walking_minutes": 545,
+    "walking_distance_m": 32682,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-07",
+    "calculated_at": "2026-10-10T13:17:43.814759+00:00"
+  },
+  "87783282:44.53468246417781,3.269484432074248:44.606525,3.283014": {
+    "closest_station": "Marvejols",
+    "estimated_walking_minutes": 188,
+    "walking_distance_m": 11229,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-05",
+    "calculated_at": "2026-10-10T13:17:44.034312+00:00"
+  },
+  "87783241:44.78843433611811,3.272571382393344:44.801983,3.480259": {
+    "closest_station": "St-Chély-d'Apcher",
+    "estimated_walking_minutes": 370,
+    "walking_distance_m": 22131,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-07",
+    "calculated_at": "2026-10-10T13:17:44.322016+00:00"
+  },
+  "87613059:44.77346913215607,1.7223161770331452:44.779743,1.746005": {
+    "closest_station": "Gramat",
+    "estimated_walking_minutes": 41,
+    "walking_distance_m": 2422,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-07",
+    "calculated_at": "2026-10-10T13:17:44.440834+00:00"
+  },
+  "87612010:43.57614338999371,1.4760599276183615:43.58902,1.49103": {
+    "closest_station": "Montaudran",
+    "estimated_walking_minutes": 38,
+    "walking_distance_m": 2257,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-05",
+    "calculated_at": "2026-10-10T13:17:44.688485+00:00"
+  },
+  "87611301:43.57918293347269,1.4494444861466602:43.593891,1.449152": {
+    "closest_station": "St-Agne",
+    "estimated_walking_minutes": 35,
+    "walking_distance_m": 2061,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-09",
+    "calculated_at": "2026-10-10T13:17:44.986303+00:00"
+  },
+  "87773002:43.606091074725896,3.882757509945223:43.611828,3.880019": {
+    "closest_station": "Montpellier-St-Roch",
+    "estimated_walking_minutes": 18,
+    "walking_distance_m": 1058,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-08",
+    "calculated_at": "2026-10-10T13:17:45.218021+00:00"
+  },
+  "87613422:44.36265275690909,2.5802646043215667:44.352242,2.567759": {
+    "closest_station": "Rodez",
+    "estimated_walking_minutes": 38,
+    "walking_distance_m": 2243,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-07",
+    "calculated_at": "2026-10-10T13:17:45.429756+00:00"
+  },
+  "87781104:43.19095737821529,3.006223725835589:43.181561,3.0171": {
+    "closest_station": "Narbonne",
+    "estimated_walking_minutes": 25,
+    "walking_distance_m": 1468,
+    "status": "calculated",
+    "source_url": "https://cartes.gouv.fr/aide/fr/guides-utilisateur/utiliser-les-services-de-la-geoplateforme/calcul-itineraire/",
+    "notice": "Estimation IGN sur itinéraire piéton ; prévoir une marge pour le groupe et vérifier le parcours sur place.",
+    "resource_version": "2026-10-08",
+    "calculated_at": "2026-10-10T13:17:45.683921+00:00"
+  }
+}
