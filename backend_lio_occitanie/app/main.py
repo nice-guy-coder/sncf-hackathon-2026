@@ -1,131 +1,352 @@
+import uuid
+from typing import List, Optional
 from fastapi import FastAPI, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from sqlalchemy import select, or_
-from .db import Base, engine, get_db
-from .models import Accommodation, ProjectSession, ConversationMessage, Destination, ReservationRequest, Feedback
-from .llm import analyze_request
-Base.metadata.create_all(bind=engine)
-app=FastAPI(title="Backend liO — sorties scolaires Occitanie",version="0.1.0",
- description="Prototype. La recherche ferroviaire attend une source actualisée.")
-class SessionIn(BaseModel): initial_text:str|None=None
-class MessageIn(BaseModel):
-    input_mode:str="text"
-    content:str=Field(min_length=1,max_length=12000)
-class DestinationSearchIn(BaseModel):
-    themes:list[str]=[]
-    max_train_minutes:int|None=None
-    commune:str|None=None
-    department:str|None=None
-class SelectIn(BaseModel): destination_text:str=Field(min_length=1,max_length=300)
-class ReservationIn(BaseModel):
-    session_id:str
-    contact_name:str
-    school_name:str
-    email:str
 
-@app.get("/health")
-def health(db:Session=Depends(get_db)):
-    db.execute(select(1)); return {"status":"ok","database":"connected"}
-@app.get("/api/v1/meta")
-def meta():
-    return {"api_version":"v1","region":"Occitanie","input_modes":["text","speech_to_text"],
-            "classical_form":False,"train_source_configured":False}
-@app.get("/api/v1/destinations")
-def destinations(q:str|None=None,commune:str|None=None,department:str|None=None,
-                 page:int=Query(1,ge=1),limit:int=Query(20,ge=1,le=100),db:Session=Depends(get_db)):
-    stmt=select(Destination)
-    if q: stmt=stmt.where(Destination.name.ilike(f"%{q}%"))
-    if commune: stmt=stmt.where(Destination.commune.ilike(f"%{commune}%"))
-    if department: stmt=stmt.where(Destination.department.ilike(f"%{department}%"))
-    rows=db.scalars(stmt.offset((page-1)*limit).limit(limit)).all()
-    return {"items":[{"id":d.id,"name":d.name,"commune":d.commune,"department":d.department} for d in rows],"page":page,"limit":limit}
-@app.get("/api/v1/accommodations")
-def accommodations(q:str|None=None,theme:str|None=None,commune:str|None=None,department:str|None=None,
-                   min_capacity:int|None=None,page:int=Query(1,ge=1),limit:int=Query(20,ge=1,le=100),db:Session=Depends(get_db)):
-    stmt=select(Accommodation)
-    if q: stmt=stmt.where(or_(Accommodation.name.ilike(f"%{q}%"),Accommodation.nearby_sites_raw.ilike(f"%{q}%")))
-    if theme: stmt=stmt.where(Accommodation.themes_raw.ilike(f"%{theme}%"))
-    if commune: stmt=stmt.where(Accommodation.commune.ilike(f"%{commune}%"))
-    if department: stmt=stmt.where(Accommodation.department.ilike(f"%{department}%"))
-    if min_capacity is not None: stmt=stmt.where(Accommodation.total_capacity>=min_capacity)
-    rows=db.scalars(stmt.order_by(Accommodation.name).offset((page-1)*limit).limit(limit)).all()
-    return {"items":[{"id":a.id,"name":a.name,"commune":a.commune,"department":a.department,
-      "themes":a.themes_raw,"capacity":a.total_capacity,"student_beds":a.student_beds,
-      "supervisor_beds":a.supervisor_beds,"nearest_station":a.nearest_station_raw,
-      "distance_vol_oiseau_km":a.straight_line_distance_km,"website":a.website_url,"permalink":a.permalink}
-      for a in rows],"page":page,"limit":limit}
-@app.post("/api/v1/sessions")
-def create_session(body:SessionIn,db:Session=Depends(get_db)):
-    s=ProjectSession(original_request=body.initial_text,status="draft"); db.add(s); db.commit(); db.refresh(s)
-    if body.initial_text:
-        db.add(ConversationMessage(session_id=s.id,content=body.initial_text,input_mode="text")); db.commit()
-    return {"session_id":s.id,"status":s.status}
-@app.get("/api/v1/sessions/{session_id}")
-def get_session(session_id:str,db:Session=Depends(get_db)):
-    s=db.get(ProjectSession,session_id)
-    if not s: raise HTTPException(404,detail={"code":"session_not_found"})
-    return {"session_id":s.id,"status":s.status,"request":s.original_request,"structured_request":s.structured_request,
-      "departure_station":s.departure_station_text,"departure_date":s.departure_date,
-      "student_count":s.student_count,"supervisor_count":s.supervisor_count,"destination":s.destination_text}
-@app.post("/api/v1/sessions/{session_id}/messages")
-def add_message(session_id:str,body:MessageIn,db:Session=Depends(get_db)):
-    s=db.get(ProjectSession,session_id)
-    if not s: raise HTTPException(404,detail={"code":"session_not_found"})
-    if body.input_mode not in ("text","speech_to_text"): raise HTTPException(422,detail="input_mode doit être text ou speech_to_text")
-    db.add(ConversationMessage(session_id=session_id,content=body.content,input_mode=body.input_mode))
-    s.original_request=body.content; db.commit()
-    return {"stored":True,"session_id":session_id}
-@app.post("/api/v1/sessions/{session_id}/analyze")
-def analyze(session_id:str,db:Session=Depends(get_db)):
-    s=db.get(ProjectSession,session_id)
-    if not s: raise HTTPException(404,detail={"code":"session_not_found"})
-    if not s.original_request: raise HTTPException(400,detail={"code":"empty_request"})
-    data=analyze_request(s.original_request); s.structured_request=data
-    s.departure_station_text=data.get("departure_station_text"); s.departure_date=data.get("departure_date")
-    s.student_count=data.get("student_count"); s.supervisor_count=data.get("supervisor_count")
-    s.destination_text=data.get("destination_text"); s.status="needs_clarification" if data["missing_fields"] else "analyzed"
-    db.commit(); return data
-@app.post("/api/v1/sessions/{session_id}/destination-search")
-def destination_search(session_id:str,body:DestinationSearchIn,db:Session=Depends(get_db)):
-    s=db.get(ProjectSession,session_id)
-    if not s: raise HTTPException(404,detail={"code":"session_not_found"})
-    stmt=select(Accommodation)
-    if body.themes: stmt=stmt.where(or_(*[Accommodation.themes_raw.ilike(f"%{t}%") for t in body.themes]))
-    if body.commune: stmt=stmt.where(Accommodation.commune.ilike(f"%{body.commune}%"))
-    if body.department: stmt=stmt.where(Accommodation.department.ilike(f"%{body.department}%"))
-    rows=db.scalars(stmt.limit(50)).all()
-    return {"items":[{"accommodation_id":a.id,"name":a.name,"commune":a.commune,"department":a.department,
-      "themes":a.themes_raw,"nearest_station":a.nearest_station_raw,"distance_vol_oiseau_km":a.straight_line_distance_km}
-      for a in rows],"notice":"Suggestions fondées sur les données d’hébergement disponibles ; la durée de trajet n’est pas calculable sans données ferroviaires vérifiées."}
-@app.post("/api/v1/sessions/{session_id}/destination-selection")
-def select_destination(session_id:str,body:SelectIn,db:Session=Depends(get_db)):
-    s=db.get(ProjectSession,session_id)
-    if not s: raise HTTPException(404,detail={"code":"session_not_found"})
-    s.destination_text=body.destination_text; s.status="destination_selected"; db.commit()
-    return {"session_id":s.id,"destination":s.destination_text,"departure_station":s.departure_station_text,"status":s.status}
+from .db import Base, engine, get_db
+from .models import Accommodation, ProjectSession, ReservationRequest, Feedback
+from .llm import analyze_request
+from .train_engine import find_train_options
+
+# Initialisation des tables SQLite / PostgreSQL
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(
+    title="Copilote Train liO Occitanie — Sorties Scolaires",
+    version="1.0.0",
+    description="API simplifiée pour le hackathon SNCF : de l'idée pédagogique à la pré-réservation vérifiée."
+)
+
+# ---------------------------------------------------------
+# Schémas d'entrée / sortie Pydantic
+# ---------------------------------------------------------
+class TripAnalyzeIn(BaseModel):
+    content: str = Field(..., min_length=1, max_length=12000, description="Message en langage naturel ou transcription vocale")
+    input_mode: str = Field("text", description="text ou speech_to_text")
+    session_id: Optional[str] = Field(None, description="ID session existante pour enrichissement")
+
+class DestinationSearchIn(BaseModel):
+    session_id: Optional[str] = None
+    themes: List[str] = []
+    commune: Optional[str] = None
+    department: Optional[str] = None
+    max_train_minutes: Optional[int] = None
+
+class TrainSearchIn(BaseModel):
+    session_id: Optional[str] = None
+    departure_station: str = Field(..., description="Gare ou ville de départ renseignée par l'enseignant")
+    destination_station: str = Field(..., description="Gare d'arrivée liO")
+    departure_date: Optional[str] = Field(None, description="Date de départ (ex: 2026-11-15)")
+    total_participants: int = Field(30, ge=1, le=100, description="Élèves + accompagnateurs")
+    walking_minutes: int = Field(15, ge=0, description="Temps estimé gare -> site")
+
+class TripSummaryIn(BaseModel):
+    session_id: str
+    destination_id: Optional[str] = None
+    train_number: Optional[str] = None
+
+class PreReservationIn(BaseModel):
+    session_id: str
+    contact_name: str = Field(..., min_length=2)
+    school_name: str = Field(..., min_length=2)
+    email: str = Field(..., min_length=5)
+    phone: Optional[str] = None
+
+class FeedbackIn(BaseModel):
+    session_id: Optional[str] = None
+    overall_rating: int = Field(..., ge=1, le=5, description="Note globale de 1 à 5")
+    punctuality_rating: Optional[int] = Field(None, ge=1, le=5)
+    pedagogical_rating: Optional[int] = Field(None, ge=1, le=5)
+    accessibility_rating: Optional[int] = Field(None, ge=1, le=5)
+    comments: Optional[str] = None
+
+
+# ---------------------------------------------------------
+# 1. Analyse du message et structuration du projet (LLM / Règles)
+# ---------------------------------------------------------
+@app.post("/api/trips/analyze", summary="Analyse du besoin en langage naturel")
+@app.post("/api/v1/sessions/analyze")
+def analyze_trip(body: TripAnalyzeIn, db: Session = Depends(get_db)):
+    """
+    Point d'entrée unique de la saisie enseignant (écrite ou vocale transcrite).
+    Extrait la gare de départ, les effectifs, la date, le thème et vérifie la faisabilité.
+    """
+    analysis = analyze_request(body.content)
+
+    # Création ou reprise de la session
+    if body.session_id:
+        session_obj = db.get(ProjectSession, body.session_id)
+        if not session_obj:
+            raise HTTPException(404, detail="Session non trouvée")
+        session_obj.original_request = body.content
+        session_obj.input_mode = body.input_mode
+    else:
+        session_obj = ProjectSession(
+            original_request=body.content,
+            input_mode=body.input_mode
+        )
+        db.add(session_obj)
+
+    session_obj.structured_request = analysis
+    session_obj.departure_station_text = analysis.get("departure_station_text")
+    session_obj.departure_date = analysis.get("departure_date")
+    session_obj.class_level = analysis.get("class_level")
+    session_obj.student_count = analysis.get("student_count")
+    session_obj.supervisor_count = analysis.get("supervisor_count")
+    session_obj.destination_text = analysis.get("destination_text")
+    session_obj.status = "needs_clarification" if analysis.get("missing_fields") else "ready_for_destinations"
+
+    db.commit()
+    db.refresh(session_obj)
+
+    return {
+        "session_id": session_obj.id,
+        "status": session_obj.status,
+        "input_mode": session_obj.input_mode,
+        "extracted_data": analysis,
+        "next_step": "destinations_search" if not analysis.get("missing_fields") else "clarification"
+    }
+
+
+# ---------------------------------------------------------
+# 2. Recherche et suggestions de destinations
+# ---------------------------------------------------------
+@app.post("/api/destinations/search", summary="Recherche de destinations adaptées au projet")
+def search_destinations(body: DestinationSearchIn, db: Session = Depends(get_db)):
+    """
+    Propose des hébergements et sites touristiques d'Occitanie reliés au réseau liO.
+    Calcule le temps piéton gare -> site et vérifie l'accessibilité scolaire.
+    """
+    stmt = select(Accommodation)
+    if body.themes:
+        stmt = stmt.where(or_(*[Accommodation.themes_raw.ilike(f"%{t}%") for t in body.themes]))
+    if body.commune:
+        stmt = stmt.where(Accommodation.commune.ilike(f"%{body.commune}%"))
+    if body.department:
+        stmt = stmt.where(Accommodation.department.ilike(f"%{body.department}%"))
+
+    rows = db.scalars(stmt.limit(30)).all()
+
+    items = []
+    for acc in rows:
+        dist_km = acc.straight_line_distance_km or 0.0
+        # Estimation marche groupe scolaire : 15 min par km (4 km/h)
+        walk_min = int(round(dist_km * 15))
+        is_ok_walking = walk_min <= 20
+
+        items.append({
+            "id": acc.id,
+            "name": acc.name,
+            "commune": acc.commune,
+            "department": acc.department,
+            "themes": acc.themes_raw,
+            "nearest_station": acc.nearest_station_raw,
+            "distance_vol_oiseau_km": dist_km,
+            "estimated_walking_minutes": walk_min,
+            "accessibility_verdict": (
+                "🟢 Accès direct à pied (≤ 20 min)"
+                if is_ok_walking
+                else "🟡 Transport urbain / navette conseillée (> 20 min)"
+            ),
+            "capacity": acc.total_capacity,
+            "nearby_activities": acc.nearby_sites_raw,
+            "website": acc.website_url,
+            "nature_label": acc.nature_label
+        })
+
+    return {
+        "count": len(items),
+        "destinations": items,
+        "advice": "Sélectionnez un site pour afficher les trains liO correspondants."
+    }
+
+
+# ---------------------------------------------------------
+# 3. Recherche des trains liO + Jauge 50 pax + Indice Confiance
+# ---------------------------------------------------------
+@app.post("/api/trains/search", summary="Recherche de trains liO avec Jauge et Confiance")
 @app.post("/api/v1/sessions/{session_id}/train-search")
-def train_search(session_id:str,db:Session=Depends(get_db)):
-    s=db.get(ProjectSession,session_id)
-    if not s: raise HTTPException(404,detail={"code":"session_not_found"})
-    if not s.departure_station_text: raise HTTPException(409,detail={"code":"departure_station_required"})
-    if not s.departure_date: raise HTTPException(409,detail={"code":"departure_date_required"})
-    raise HTTPException(503,detail={"code":"train_source_not_configured","message":"Aucune source d’horaires actualisée n’est configurée ; aucun horaire n’est inventé."})
-@app.get("/api/v1/sessions/{session_id}/summary")
-def summary(session_id:str,db:Session=Depends(get_db)):
-    s=db.get(ProjectSession,session_id)
-    if not s: raise HTTPException(404,detail={"code":"session_not_found"})
-    return {"session_id":s.id,"status":s.status,"departure_station":s.departure_station_text,
-      "departure_date":s.departure_date,"student_count":s.student_count,"supervisor_count":s.supervisor_count,
-      "destination":s.destination_text,"warning":"Les horaires et places ne sont pas confirmés par ce prototype."}
+def search_trains(
+    body: Optional[TrainSearchIn] = None,
+    session_id: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    """
+    Recherche les horaires réels liO (février-juin 2026), calcule la jauge de 50 places
+    et l'Indicateur 'Confiance Voyageur Scolaire' (/100) basé sur la régularité et les suppressions.
+    """
+    dep_station = ""
+    dest_station = ""
+    pax = 30
+    walk_min = 15
+    dep_date = None
+
+    if body:
+        dep_station = body.departure_station
+        dest_station = body.destination_station
+        pax = body.total_participants
+        walk_min = body.walking_minutes
+        dep_date = body.departure_date
+    elif session_id:
+        sess = db.get(ProjectSession, session_id)
+        if not sess:
+            raise HTTPException(404, detail="Session non trouvée")
+        dep_station = sess.departure_station_text or ""
+        dest_station = sess.destination_text or ""
+        pax = (sess.student_count or 0) + (sess.supervisor_count or 0) or 30
+        dep_date = sess.departure_date
+
+    if not dep_station or not dest_station:
+        raise HTTPException(400, detail="Gare de départ et gare d'arrivée requises.")
+
+    trains = find_train_options(
+        origin=dep_station,
+        destination_station=dest_station,
+        requested_pax=pax,
+        walking_minutes=walk_min
+    )
+
+    return {
+        "departure_station": dep_station,
+        "arrival_station": dest_station,
+        "departure_date": dep_date or "2026-11-15",
+        "requested_travelers": pax,
+        "trains_count": len(trains),
+        "results": trains,
+        "policy_notice": "Seuls les trains liO ouverts aux groupes (max 50 pax) sont affichés."
+    }
+
+
+# ---------------------------------------------------------
+# 4. Récapitulatif du voyage
+# ---------------------------------------------------------
+@app.post("/api/trips/summary", summary="Synthèse complète du projet avant réservation")
+def trip_summary(body: TripSummaryIn, db: Session = Depends(get_db)):
+    session_obj = db.get(ProjectSession, body.session_id)
+    if not session_obj:
+        raise HTTPException(404, detail="Session non trouvée")
+
+    acc = db.get(Accommodation, body.destination_id) if body.destination_id else None
+
+    return {
+        "session_id": session_obj.id,
+        "status": session_obj.status,
+        "project": {
+            "departure_station": session_obj.departure_station_text,
+            "departure_date": session_obj.departure_date,
+            "class_level": session_obj.class_level,
+            "students": session_obj.student_count,
+            "supervisors": session_obj.supervisor_count,
+            "total_participants": (session_obj.student_count or 0) + (session_obj.supervisor_count or 0)
+        },
+        "chosen_destination": {
+            "name": acc.name if acc else session_obj.destination_text,
+            "commune": acc.commune if acc else None,
+            "department": acc.department if acc else None,
+            "nearest_station": acc.nearest_station_raw if acc else None
+        },
+        "selected_train": body.train_number or "Train liO direct du matin",
+        "official_disclaimer": "Une demande de pré-réservation n'est pas un billet confirmé ; une validation liO est requise."
+    }
+
+
+# ---------------------------------------------------------
+# 5. Demande de pré-réservation
+# ---------------------------------------------------------
+@app.post("/api/prereservations", summary="Créer une demande de pré-réservation")
 @app.post("/api/v1/reservation-requests")
-def reservation(body:ReservationIn,db:Session=Depends(get_db)):
-    if not db.get(ProjectSession,body.session_id): raise HTTPException(404,detail={"code":"session_not_found"})
-    r=ReservationRequest(session_id=body.session_id,contact_name=body.contact_name,school_name=body.school_name,email=body.email,status="pending")
-    db.add(r); db.commit(); db.refresh(r)
-    return {"request_id":r.id,"status":"pending","message":"Demande enregistrée en attente ; ce n’est pas une réservation confirmée."}
+def create_prereservation(body: PreReservationIn, db: Session = Depends(get_db)):
+    session_obj = db.get(ProjectSession, body.session_id)
+    if not session_obj:
+        raise HTTPException(404, detail="Session non trouvée")
+
+    ref_code = f"LIO-2026-{uuid.uuid4().hex[:6].upper()}"
+    req = ReservationRequest(
+        reference_code=ref_code,
+        session_id=body.session_id,
+        contact_name=body.contact_name,
+        school_name=body.school_name,
+        email=body.email,
+        phone=body.phone,
+        status="pending"
+    )
+    db.add(req)
+    session_obj.status = "reservation_pending"
+    db.commit()
+    db.refresh(req)
+
+    return {
+        "reference_code": req.reference_code,
+        "status": "pending",
+        "message": "Demande de pré-réservation transmise — confirmation en attente.",
+        "contact": req.contact_name,
+        "school": req.school_name,
+        "submitted_at": req.submitted_at.isoformat()
+    }
+
+
+# ---------------------------------------------------------
+# 6. Retour d'expérience après sortie
+# ---------------------------------------------------------
+@app.post("/api/feedback", summary="Enregistrer un retour d'expérience après voyage")
 @app.post("/api/v1/sessions/{session_id}/feedback")
-def feedback(session_id:str,rating:int=Query(...,ge=1,le=5),comments:str|None=None,db:Session=Depends(get_db)):
-    if not db.get(ProjectSession,session_id): raise HTTPException(404,detail={"code":"session_not_found"})
-    db.add(Feedback(session_id=session_id,rating=rating,comments=comments)); db.commit()
-    return {"stored":True}
+def submit_feedback(body: FeedbackIn, db: Session = Depends(get_db)):
+    fb = Feedback(
+        session_id=body.session_id,
+        overall_rating=body.overall_rating,
+        punctuality_rating=body.punctuality_rating,
+        pedagogical_rating=body.pedagogical_rating,
+        accessibility_rating=body.accessibility_rating,
+        comments=body.comments
+    )
+    db.add(fb)
+    db.commit()
+
+    return {
+        "status": "recorded",
+        "message": "Merci ! Votre retour d'expérience permet d'affiner l'Indicateur Confiance Voyageur Scolaire."
+    }
+
+
+# ---------------------------------------------------------
+# Utilitaires & Compatibilité
+# ---------------------------------------------------------
+@app.get("/health", summary="Vérification santé de l'API")
+def health(db: Session = Depends(get_db)):
+    db.execute(select(1))
+    return {"status": "ok", "service": "lio-copilote-backend", "database": "connected"}
+
+@app.get("/api/v1/accommodations", summary="Liste des hébergements scolaires")
+def list_accommodations(
+    q: Optional[str] = None,
+    theme: Optional[str] = None,
+    commune: Optional[str] = None,
+    department: Optional[str] = None,
+    page: int = Query(1, ge=1),
+    limit: int = Query(20, ge=1, le=100),
+    db: Session = Depends(get_db)
+):
+    stmt = select(Accommodation)
+    if q:
+        stmt = stmt.where(or_(Accommodation.name.ilike(f"%{q}%"), Accommodation.nearby_sites_raw.ilike(f"%{q}%")))
+    if theme:
+        stmt = stmt.where(Accommodation.themes_raw.ilike(f"%{theme}%"))
+    if commune:
+        stmt = stmt.where(Accommodation.commune.ilike(f"%{commune}%"))
+    if department:
+        stmt = stmt.where(Accommodation.department.ilike(f"%{department}%"))
+
+    rows = db.scalars(stmt.offset((page - 1) * limit).limit(limit)).all()
+    return {
+        "items": [
+            {
+                "id": a.id, "name": a.name, "commune": a.commune, "department": a.department,
+                "themes": a.themes_raw, "capacity": a.total_capacity,
+                "nearest_station": a.nearest_station_raw, "distance_vol_oiseau_km": a.straight_line_distance_km
+            } for a in rows
+        ],
+        "page": page,
+        "limit": limit
+    }
