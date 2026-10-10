@@ -47,6 +47,17 @@ CREATE TABLE IF NOT EXISTS status_history (
  old_status TEXT, new_status TEXT NOT NULL, changed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
  changed_by TEXT, note TEXT
 );
+CREATE TABLE IF NOT EXISTS stations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    uic_code TEXT UNIQUE,
+    commune TEXT,
+    department TEXT,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    source_name TEXT,
+    imported_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 CREATE INDEX IF NOT EXISTS idx_accommodation_place ON accommodations(department,commune);
 CREATE INDEX IF NOT EXISTS idx_messages_session ON conversation_messages(session_id,created_at);
 CREATE INDEX IF NOT EXISTS idx_train_stops_station ON train_stops(station_id);

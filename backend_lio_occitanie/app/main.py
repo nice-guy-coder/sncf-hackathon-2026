@@ -129,3 +129,327 @@ def feedback(session_id:str,rating:int=Query(...,ge=1,le=5),comments:str|None=No
     if not db.get(ProjectSession,session_id): raise HTTPException(404,detail={"code":"session_not_found"})
     db.add(Feedback(session_id=session_id,rating=rating,comments=comments)); db.commit()
     return {"stored":True}
+@app.get("/api/v1/themes")
+def themes(db: Session = Depends(get_db)):
+    rows = db.scalars(
+        select(Theme).order_by(Theme.name)
+    ).all()
+
+    return {
+        "items": [
+            {
+                "id": t.id,
+                "name": t.name,
+                "key": t.normalized_key,
+                "description": t.description,
+            }
+            for t in rows
+        ]
+    }
+
+@app.get("/api/v1/destinations/{destination_id}")
+def destination_detail(
+    destination_id: str,
+    db: Session = Depends(get_db)
+):
+    d = db.get(Destination, destination_id)
+
+    if not d:
+        raise HTTPException(
+            404,
+            detail={"code": "destination_not_found"}
+        )
+
+    themes = db.scalars(
+        select(DestinationTheme)
+        .where(
+            DestinationTheme.destination_id == destination_id
+        )
+    ).all()
+
+    access = db.scalars(
+        select(DestinationStationAccess)
+        .where(
+            DestinationStationAccess.destination_id == destination_id
+        )
+    ).all()
+
+    return {
+        "id": d.id,
+        "name": d.name,
+        "commune": d.commune,
+        "department": d.department,
+        "description": d.description,
+        "themes_count": len(themes),
+        "access_count": len(access),
+    }
+
+@app.get("/api/v1/destinations/{destination_id}/access")
+def destination_access(
+    destination_id: str,
+    db: Session = Depends(get_db)
+):
+    rows = db.scalars(
+        select(DestinationStationAccess)
+        .where(
+            DestinationStationAccess.destination_id == destination_id
+        )
+    ).all()
+
+    return {
+        "items": [
+            {
+                "station_id": r.station_id,
+                "distance_km": r.distance_km,
+                "duration_minutes": r.duration_minutes,
+                "distance_type": r.distance_type,
+                "mode": r.mode,
+                "confidence": r.confidence,
+            }
+            for r in rows
+        ]
+    }
+
+@app.get("/api/v1/accommodations/{accommodation_id}")
+def accommodation_detail(
+    accommodation_id: str,
+    db: Session = Depends(get_db)
+):
+    a = db.get(Accommodation, accommodation_id)
+
+    if not a:
+        raise HTTPException(
+            404,
+            detail={"code": "accommodation_not_found"}
+        )
+
+    return {
+        "id": a.id,
+        "name": a.name,
+        "commune": a.commune,
+        "department": a.department,
+        "capacity": a.total_capacity,
+        "themes": a.themes_raw,
+        "website": a.website_url,
+        "permalink": a.permalink,
+    }
+
+@app.patch("/api/v1/sessions/{session_id}")
+def update_session(
+    session_id: str,
+    body: SessionPatchIn,
+    db: Session = Depends(get_db)
+):
+    s = db.get(ProjectSession, session_id)
+
+    if not s:
+        raise HTTPException(
+            404,
+            detail={"code": "session_not_found"}
+        )
+
+    for field, value in body.model_dump(
+        exclude_none=True
+    ).items():
+        setattr(s, field, value)
+
+    db.commit()
+
+    return {
+        "updated": True,
+        "session_id": s.id
+    }
+
+@app.post("/api/v1/sessions/{session_id}/clarifications")
+def clarification(
+    session_id: str,
+    body: MessageIn,
+    db: Session = Depends(get_db)
+):
+    db.add(
+        ConversationMessage(
+            session_id=session_id,
+            content=body.content,
+            input_mode="text"
+        )
+    )
+
+    db.commit()
+
+    return {
+        "stored": True,
+        "reanalyze_required": True
+    }
+
+@app.get("/api/v1/sessions/{session_id}/next-step")
+def next_step(
+    session_id: str,
+    db: Session = Depends(get_db)
+):
+    s = db.get(ProjectSession, session_id)
+
+    if not s:
+        raise HTTPException(
+            404,
+            detail={"code":"session_not_found"}
+        )
+
+    if not s.departure_station_text:
+        return {"next_step":"departure_station"}
+
+    if not s.departure_date:
+        return {"next_step":"departure_date"}
+
+    if not s.destination_text:
+        return {"next_step":"destination"}
+
+    return {"next_step":"train_search"}
+
+@app.get("/api/v1/sessions/{session_id}/itineraries")
+def itineraries(
+    session_id: str,
+    db: Session = Depends(get_db)
+):
+    rows = db.scalars(
+        select(Itinerary)
+        .where(
+            Itinerary.session_id == session_id
+        )
+    ).all()
+
+    return {
+        "items":[
+            {
+                "id": i.id,
+                "transfers": i.transfer_count,
+                "duration": i.total_train_minutes,
+                "status": i.source_status
+            }
+            for i in rows
+        ]
+    }
+
+@app.get("/api/v1/itineraries/{itinerary_id}")
+def itinerary_detail(
+    itinerary_id: str,
+    db: Session = Depends(get_db)
+):
+    i = db.get(Itinerary, itinerary_id)
+
+    if not i:
+        raise HTTPException(
+            404,
+            detail={"code":"itinerary_not_found"}
+        )
+
+    legs = db.scalars(
+        select(ItineraryLeg)
+        .where(
+            ItineraryLeg.itinerary_id == itinerary_id
+        )
+    ).all()
+
+    return {
+        "id": i.id,
+        "legs": [
+            {
+                "sequence": l.sequence,
+                "service_id": l.service_id
+            }
+            for l in legs
+        ]
+    }
+
+@app.post("/api/v1/sessions/{session_id}/feasibility-check")
+def feasibility(
+    session_id: str,
+    db: Session = Depends(get_db)
+):
+    s = db.get(ProjectSession, session_id)
+
+    if not s:
+        raise HTTPException(
+            404,
+            detail={"code":"session_not_found"}
+        )
+
+    return {
+        "feasible": True,
+        "checks": [
+            "group_size_unknown",
+            "train_data_unavailable"
+        ]
+    }
+
+@app.get("/api/v1/reservation-requests/{request_id}")
+def reservation_status(
+    request_id: str,
+    db: Session = Depends(get_db)
+):
+    r = db.get(
+        ReservationRequest,
+        request_id
+    )
+
+    if not r:
+        raise HTTPException(
+            404,
+            detail={"code":"reservation_not_found"}
+        )
+
+    return {
+        "id": r.id,
+        "status": r.status
+    }
+
+@app.patch("/api/v1/reservation-requests/{request_id}/status")
+def reservation_update(
+    request_id: str,
+    body: ReservationStatusIn,
+    db: Session = Depends(get_db)
+):
+    r = db.get(
+        ReservationRequest,
+        request_id
+    )
+
+    if not r:
+        raise HTTPException(
+            404,
+            detail={"code":"reservation_not_found"}
+        )
+
+    old = r.status
+    r.status = body.status
+
+    db.add(
+        StatusHistory(
+            reservation_request_id=r.id,
+            old_status=old,
+            new_status=body.status,
+            changed_by=body.changed_by,
+            note=body.note
+        )
+    )
+
+    db.commit()
+
+    return {
+        "updated": True,
+        "status": body.status
+    }
+
+@app.get("/api/v1/destinations/{destination_id}/feedback-summary")
+def feedback_summary(
+    destination_id: str,
+    db: Session = Depends(get_db)
+):
+    count = db.scalar(
+        select(func.count())
+        .select_from(Feedback)
+    )
+
+    return {
+        "responses": count,
+        "anonymous": True
+    }
