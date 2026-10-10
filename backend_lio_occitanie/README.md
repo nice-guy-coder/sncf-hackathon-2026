@@ -93,3 +93,22 @@ python scripts/cache_walking_routes.py
 ```
 
 Les nouvelles coordonnées déclenchent un calcul réseau avec délai de 8 secondes et 4 départs de requête par seconde. Sans coordonnées ou en cas d’échec, la durée reste inconnue ; aucune conversion de distance à vol d’oiseau n’est utilisée. Un recalage supérieur à 300 mètres est rejeté. Les estimations n’intègrent ni le rythme d’une classe, ni les fermetures locales, ni une validation PMR.
+
+### Analyse des attractions par le LLM local et sources Web
+
+Les cartes appellent `POST /api/destinations/{id}/assessment` avec les mêmes critères que la recherche (`session_id`, `themes`, `class_level`). Le backend récupère les pages HTTPS du site/source officiel enregistré dans le catalogue et jusqu'à deux liens vers des ressources scolaires découverts sur ces domaines. Il consulte aussi les références de l'Éducation nationale. Il ne s'agit pas d'un moteur de recherche Internet général et aucun fournisseur de recherche payant n'est requis.
+
+Ces extraits et le profil pédagogique de la session (issu du texte ou de Whisper) sont transmis au serveur llama.cpp via `LLM_BASE_URL`. Le modèle fournit une analyse JSON validée : adéquation des quatre critères, explications, argumentaire et URL consultées. Le backend applique les pondérations 50/20/15/15 et n'accorde aucun point aux critères absents. Les URL inventées, réponses invalides et références manquantes provoquent un retour explicite à l'évaluation provisoire du catalogue. Les activités proposées sont distinguées des ateliers attestés ; le résultat reste indicatif.
+
+L'interface affiche les résultats progressivement, les sources, la date d'évaluation, les incertitudes et un bouton pour réessayer en cas d'échec. Les appels sont mis en file pour le serveur local configuré avec une seule séquence d'inférence. Une analyse peut prendre plusieurs minutes pour une liste de lieux lors de la première consultation.
+
+Le cache des pages et des évaluations est valable sept jours par défaut. Sa clé inclut le lieu, le thème, la classe et le profil pédagogique. Configuration :
+
+- `PEDAGOGY_CACHE_DIR` : dossier du cache (Docker : `/app/data/pedagogy-cache`, persistant dans le volume `data`).
+- `PEDAGOGY_CACHE_TTL_S` : durée de validité, par défaut `604800`.
+- `LLM_MODEL_REVISION` : valeur à changer lorsque le modèle est remplacé pour invalider ses anciennes évaluations.
+- `LLM_BASE_URL`, `LLM_TIMEOUT_S` : connexion et délai du serveur local.
+
+Pour charger le changement avec Docker : `docker compose up -d --build backend` depuis `backend_lio_occitanie`. Hors Docker, définir `LLM_BASE_URL=http://localhost:8080` si llama.cpp écoute sur ce port, puis redémarrer le backend. Le backend doit pouvoir accéder aux sites officiels sur Internet. Les sites dynamiques, documents PDF, pages bloquées ou indisponibles ne sont pas automatiquement analysés ; leurs informations restent à confirmer. Pour vider le cache, supprimer uniquement le contenu du dossier configuré.
+
+Lorsque les pages de l'Éducation nationale refusent les appels HTTP (403 notamment), le backend utilise les synthèses éditoriales de `data/pedagogical_references.json`, vérifiées le 10 octobre 2026 et liées aux textes officiels. Cette utilisation est explicitement signalée parmi les informations à confirmer et dans les métadonnées des sources (`retrieval_mode=verified_local_summary`). Ces synthèses doivent être revérifiées lors d'un changement réglementaire ; elles ne constituent pas une copie exhaustive des textes.

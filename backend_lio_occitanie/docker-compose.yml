@@ -60,6 +60,8 @@ services:
       - WHISPER_MODEL_PATH=/app/models/ggml-base-q5_1.bin
       - WHISPER_THREADS=4
       - LLM_BASE_URL=http://llm:8080
+      - PEDAGOGY_CACHE_DIR=/app/data/pedagogy-cache
+      - PEDAGOGY_CACHE_TTL_S=604800
       - TZ=Europe/Paris
     volumes:
       - ./data:/app/data

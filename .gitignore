@@ -13,3 +13,5 @@ dist/
 test-results/
 playwright-report/
 *.tsbuildinfo
+
+backend_lio_occitanie/data/pedagogy-cache/

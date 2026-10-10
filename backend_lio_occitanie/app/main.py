@@ -19,6 +19,7 @@ from .stt import transcribe_audio_bytes
 from .attractions import attraction_by_id, search_attractions, stations, canonical_theme
 from .llm.school import analyze_school_request
 from .visit_pedagogy import evaluate_visit
+from .web_pedagogy import assess_visit
 from .walking import walking_route, closest_station
 
 # Initialisation du client LLM et de l'extracteur de voyage
@@ -308,6 +309,26 @@ def destination_walking(destination_id: str):
         raise HTTPException(404, detail="Attraction non trouvée")
     return walking_route(item)
 
+def assessment_context(body: DestinationSearchIn, db: Session):
+    session_obj = db.get(ProjectSession, body.session_id) if body.session_id else None
+    if body.session_id and not session_obj:
+        raise HTTPException(404, detail="Session non trouvée")
+    project = (session_obj.structured_request or {}) if session_obj else {}
+    themes = body.themes or project.get("themes", [])
+    context = {**project, "themes": themes, "class_level": body.class_level or project.get("class_level")}
+    if ((body.themes and body.themes != project.get("themes", []))
+            or (body.class_level and body.class_level != project.get("class_level"))):
+        context["pedagogical_profile"] = None
+    return context
+
+
+@app.post("/api/destinations/{destination_id}/assessment", summary="Analyse pédagogique sourcée par le LLM local")
+def destination_assessment(destination_id: str, body: DestinationSearchIn, db: Session = Depends(get_db)):
+    item = attraction_by_id(destination_id)
+    if not item:
+        raise HTTPException(404, detail="Attraction non trouvée")
+    return assess_visit(item, assessment_context(body, db), llm_client)
+
 @app.post("/api/destinations/search", summary="Recherche de destinations adaptées au projet")
 def search_destinations(body: DestinationSearchIn, db: Session = Depends(get_db)):
     session_obj = db.get(ProjectSession, body.session_id) if body.session_id else None
@@ -327,12 +348,10 @@ def search_destinations(body: DestinationSearchIn, db: Session = Depends(get_db)
                                   commune=body.commune, department=body.department, radius_km=body.radius_km)
     except ValueError as exc:
         raise HTTPException(422, detail=str(exc)) from exc
-    context = {**project, "themes": themes, "class_level": body.class_level or project.get("class_level")}
-    if ((body.themes and body.themes != project.get("themes", []))
-            or (body.class_level and body.class_level != project.get("class_level"))):
-        context["pedagogical_profile"] = None
+    context = assessment_context(body, db)
     for item in items:
         item["pedagogical_assessment"] = evaluate_visit(item, context)
+        item["assessment_context"] = body.model_dump()
         nearest = closest_station(item)
         item["closest_station"] = nearest["name"] if nearest else None
     return {

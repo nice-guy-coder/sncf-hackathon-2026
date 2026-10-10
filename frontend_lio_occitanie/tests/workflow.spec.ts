@@ -1,4 +1,10 @@
 import { test, expect, type Page } from "@playwright/test";
+// General journeys verify the provisional display independently of model/network availability.
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/destinations/*/assessment", (route) =>
+    route.abort("failed"),
+  );
+});
 async function layout(page: Page) {
   expect(
     await page.evaluate(
@@ -303,4 +309,75 @@ test("une panne du calcul piéton garde le score et permet de réessayer", async
     .getByRole("button", { name: "Réessayer le calcul à pied" })
     .click();
   await expect(card.getByText("40 min à pied", { exact: true })).toBeVisible();
+});
+
+test("analyse Web sourcée et reprise après indisponibilité du modèle", async ({
+  page,
+}) => {
+  let unavailable = true;
+  await page.route("**/api/destinations/*/assessment", async (route) => {
+    const query = route.request().postDataJSON();
+    expect(query.themes).toEqual(["patrimoine"]);
+    await route.fulfill({
+      json: {
+        score: unavailable ? 50 : 42,
+        maximum: 100,
+        coverage: 50,
+        status: "theme_only",
+        evaluation_mode: unavailable ? "rules_fallback" : "web_llm",
+        web_notice:
+          "Analyse Web/LLM indisponible. Évaluation provisoire du catalogue.",
+        evaluated_at: "2026-10-10T12:00:00Z",
+        notice: "Score indicatif sourcé.",
+        pedagogical_justification:
+          "Une enquête sur les fortifications permet de travailler l’histoire médiévale avec la classe.",
+        regulatory_argument:
+          "Le dossier articule la visite et les objectifs de la classe selon les références officielles.",
+        components: [
+          {
+            label: "Thème du projet",
+            points: 42,
+            maximum: 50,
+            renseigné: true,
+            justification:
+              "Les fortifications sont documentées par le site officiel.",
+          },
+        ],
+        references: [
+          {
+            title: "Source du lieu",
+            url: "https://www.tourisme-occitanie.com/",
+          },
+        ],
+        uncertainties: ["Disponibilité des ateliers à confirmer."],
+      },
+    });
+  });
+  await page.goto("/#suggestions");
+  await page
+    .getByRole("button", { name: "Histoire et patrimoine", exact: true })
+    .click();
+  const card = page.locator(".destination-card").first();
+  await expect(
+    card.getByText(
+      "Analyse Web/LLM indisponible. Évaluation provisoire du catalogue.",
+    ),
+  ).toBeVisible();
+  unavailable = false;
+  await card
+    .getByRole("button", { name: "Réessayer l’analyse pédagogique" })
+    .click();
+  await expect(card).toContainText("42/100");
+  await expect(card).toContainText(
+    "Analyse du LLM local à partir des sources Web",
+  );
+  await expect(
+    card.getByRole("link", { name: "Source du lieu" }),
+  ).toHaveAttribute("href", "https://www.tourisme-occitanie.com/");
+  await expect(card).toContainText("Disponibilité des ateliers à confirmer.");
+  await card.getByText("Comprendre le score").click();
+  await expect(card).toContainText(
+    "Les fortifications sont documentées par le site officiel.",
+  );
+  await layout(page);
 });

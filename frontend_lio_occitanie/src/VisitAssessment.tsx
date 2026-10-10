@@ -1,6 +1,32 @@
 import { useEffect, useState } from "react";
 import { api, type Destination, type WalkingRoute } from "./api";
 
+type Assessment = Destination["pedagogical_assessment"];
+const assessmentRequests = new Map<string, Promise<Assessment>>();
+let assessmentQueue: Promise<unknown> = Promise.resolve();
+function requestAssessment(destination: Destination) {
+  const key = JSON.stringify([destination.id, destination.assessment_context]);
+  const existing = assessmentRequests.get(key);
+  if (existing) return existing;
+  const task = assessmentQueue
+    .catch(() => undefined)
+    .then(() =>
+      api<Assessment>(
+        `/api/destinations/${encodeURIComponent(destination.id)}/assessment`,
+        destination.assessment_context,
+      ),
+    );
+  assessmentQueue = task.catch(() => undefined);
+  assessmentRequests.set(key, task);
+  task.then(
+    (result) => {
+      if (result.evaluation_mode !== "web_llm") assessmentRequests.delete(key);
+    },
+    () => assessmentRequests.delete(key),
+  );
+  return task;
+}
+
 const walkingCache = new Map<string, WalkingRoute>();
 export function WalkingInfo({ destination }: { destination: Destination }) {
   const [route, setRoute] = useState<WalkingRoute | null>(
@@ -90,13 +116,64 @@ export function WalkingInfo({ destination }: { destination: Destination }) {
 }
 
 export function VisitAssessment({ destination }: { destination: Destination }) {
-  const assessment = destination.pedagogical_assessment;
+  const [assessment, setAssessment] = useState(
+    destination.pedagogical_assessment,
+  );
+  const [pending, setPending] = useState(false);
+  const [revision, setRevision] = useState(0);
+  const contextKey = JSON.stringify(destination.assessment_context);
+  useEffect(() => {
+    setAssessment(destination.pedagogical_assessment);
+    if (!destination.assessment_context) return;
+    const controller = new AbortController();
+    setPending(true);
+    requestAssessment(destination)
+      .then((result) => {
+        if (!controller.signal.aborted) setAssessment(result);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted)
+          setAssessment({
+            ...destination.pedagogical_assessment,
+            evaluation_mode: "rules_fallback",
+            web_notice:
+              "Analyse Web/LLM indisponible. Évaluation provisoire du catalogue.",
+          });
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setPending(false);
+      });
+    return () => controller.abort();
+  }, [destination.id, contextKey, revision]);
   if (!assessment) return null;
   return (
     <section
       className="visit-assessment"
       aria-label={`Adéquation pédagogique de ${destination.name}`}
     >
+      {pending && (
+        <p role="status">
+          Recherche des sources et analyse pédagogique en cours…
+        </p>
+      )}
+      {!pending && assessment.evaluation_mode === "web_llm" && (
+        <p className="muted">
+          Analyse du LLM local à partir des sources Web ·{" "}
+          {assessment.evaluated_at &&
+            new Date(assessment.evaluated_at).toLocaleDateString("fr-FR")}
+        </p>
+      )}
+      {!pending && assessment.evaluation_mode === "rules_fallback" && (
+        <div>
+          <p className="muted">{assessment.web_notice}</p>
+          <button
+            className="btn ghost"
+            onClick={() => setRevision((value) => value + 1)}
+          >
+            Réessayer l’analyse pédagogique
+          </button>
+        </div>
+      )}
       <p className="adequacy-score">
         <strong>
           {assessment.score === null
@@ -136,6 +213,16 @@ export function VisitAssessment({ destination }: { destination: Destination }) {
           ))}
         </div>
       </details>
+      {!!assessment.uncertainties?.length && (
+        <div>
+          <h3>Informations à confirmer</h3>
+          <ul>
+            {assessment.uncertainties.map((value) => (
+              <li key={value}>{value}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       <details className="score-details">
         <summary>Comprendre le score</summary>
         <ul>
@@ -145,6 +232,7 @@ export function VisitAssessment({ destination }: { destination: Destination }) {
               {component["renseigné"]
                 ? `${component.points}/${component.maximum}`
                 : "critère non renseigné"}
+              {component.justification && <p>{component.justification}</p>}
             </li>
           ))}
         </ul>

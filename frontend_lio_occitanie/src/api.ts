@@ -36,7 +36,12 @@ export interface Destination {
   source_url: string;
   station_relation: string;
   closest_station: string | null;
+  assessment_context?: DestinationQuery;
   pedagogical_assessment: {
+    evaluation_mode?: "web_llm" | "rules_fallback";
+    web_notice?: string;
+    evaluated_at?: string;
+    uncertainties?: string[];
     score: number | null;
     maximum: number;
     coverage: number;
@@ -49,6 +54,8 @@ export interface Destination {
       points: number;
       maximum: number;
       renseigné: boolean;
+      justification?: string;
+      source_urls?: string[];
     }[];
     references: { title: string; url: string }[];
   };
@@ -126,7 +133,11 @@ export async function api<T>(
   const controller = new AbortController();
   const timeout = window.setTimeout(
     () => controller.abort(),
-    data instanceof FormData || path.endsWith("/analyze") ? 180000 : 30000,
+    data instanceof FormData ||
+      path.endsWith("/analyze") ||
+      path.endsWith("/assessment")
+      ? 180000
+      : 30000,
   );
   try {
     const response = await fetch(`${base}${path}`, {

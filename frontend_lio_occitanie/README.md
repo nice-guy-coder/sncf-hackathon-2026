@@ -61,3 +61,5 @@ Le chat et l’audio utilisent le même pré-prompt système et un JSON validé.
 Les cartes et les fiches affichent le score, la justification pédagogique, l’argumentaire réglementaire (déplié par défaut) et les liens officiels. « Comprendre le score » détaille les points et les critères manquants. Une note fondée uniquement sur le thème est identifiée comme partielle.
 
 Les minutes sont chargées séparément par `GET /api/destinations/{id}/walking` pour ne pas ralentir les résultats pédagogiques. La carte indique la gare la plus proche, la durée estimée, la distance sur l’itinéraire IGN et la date du calcul. Une erreur conserve la carte et propose de réessayer le calcul à pied. Les 9 lieux sans coordonnées n’ont pas de durée inventée.
+
+Les cartes déclenchent une analyse pédagogique Web par le LLM local, puis remplacent l'évaluation provisoire par le résultat sourcé. Les demandes sont mises en file, les analyses déjà réussies sont réutilisées pendant la navigation et les échecs peuvent être relancés. Les sources et les informations restant à confirmer sont visibles sous chaque lieu.

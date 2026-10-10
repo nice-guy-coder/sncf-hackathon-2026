@@ -51,6 +51,19 @@ class LLMClient:
         except (httpx.HTTPError, Exception):
             return False
 
+    def complete_json(self, messages, schema, name, max_tokens=2200):
+        payload = {"messages": messages, "temperature": settings.llm_temperature,
+                   "max_tokens": max_tokens, "cache_prompt": True,
+                   "response_format": {"type": "json_schema", "json_schema": {
+                       "name": name, "schema": schema, "strict": True}}}
+        try:
+            with httpx.Client(timeout=self._timeout) as client:
+                response = client.post(f"{self.base_url}/v1/chat/completions", json=payload)
+                response.raise_for_status()
+                return json.loads(response.json()["choices"][0]["message"]["content"])
+        except (httpx.HTTPError, KeyError, IndexError, json.JSONDecodeError) as exc:
+            raise LLMError(f"Échec de l'analyse du lieu : {exc}") from exc
+
     def extract_school_request(self, description: str) -> dict[str, Any]:
         from .school import PedagogicalProfile
         profile_schema = PedagogicalProfile.model_json_schema()
