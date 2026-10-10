@@ -1,6 +1,8 @@
 import uuid
+from pathlib import Path
 from typing import List, Optional
 from fastapi import FastAPI, Depends, HTTPException, Query, UploadFile, File, Form
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from sqlalchemy import select, or_
@@ -11,6 +13,8 @@ from .llm import analyze_request
 from .train_engine import find_train_options
 from .stt import transcribe_audio_bytes
 
+TEST_FRONTEND = Path(__file__).resolve().parent.parent / "test_frontend" / "index.html"
+
 # Initialisation des tables SQLite / PostgreSQL
 Base.metadata.create_all(bind=engine)
 
@@ -19,6 +23,14 @@ app = FastAPI(
     version="1.0.0",
     description="API unifiée pour le hackathon SNCF : intégration Speech-to-Text Whisper, recherche liO et pré-réservation."
 )
+
+
+@app.get("/test", include_in_schema=False)
+def test_frontend():
+    """Page HTML de test manuel de toutes les routes de l'API (dont l'enregistrement vocal)."""
+    if not TEST_FRONTEND.is_file():
+        raise HTTPException(404, detail="test_frontend/index.html introuvable")
+    return FileResponse(TEST_FRONTEND)
 
 # ---------------------------------------------------------
 # Schémas d'entrée / sortie Pydantic
@@ -175,14 +187,30 @@ async def analyze_trip_audio(
         "next_step": "destinations_search" if not analysis.get("missing_fields") else "clarification"
     }
 
-@app.post("/api/stt/transcribe", summary="Transcription audio simple via WhisperAI")
-async def transcribe_only(file: UploadFile = File(...)):
-    """Endpoint utilitaire retournant uniquement le texte transcrit de l'audio."""
-    audio_bytes = await file.read()
+@app.post("/api/analyzeVoice", summary="Transcription d'un fichier audio en texte (Whisper local)")
+def analyze_voice(
+    file: UploadFile = File(..., description="Fichier audio (WAV, WebM, OGG, MP3...)"),
+    language: str = Form("fr", description="Code langue Whisper (fr, en...)"),
+):
+    """
+    Reçoit un fichier audio, le transmet au modèle Whisper local et renvoie le texte transcrit.
+    Route synchrone : FastAPI l'exécute dans un thread, l'inférence ne bloque donc pas le serveur.
+    """
+    audio_bytes = file.file.read()
     if not audio_bytes:
         raise HTTPException(400, detail="Fichier audio vide.")
-    text = transcribe_audio_bytes(audio_bytes, filename=file.filename or "audio.wav")
-    return {"transcribed_text": text, "filename": file.filename}
+    try:
+        text = transcribe_audio_bytes(audio_bytes, filename=file.filename or "audio.wav", language=language)
+    except FileNotFoundError as exc:
+        raise HTTPException(503, detail=str(exc))
+    except Exception as exc:
+        raise HTTPException(500, detail=f"Erreur de transcription : {exc}")
+    return {
+        "text": text,
+        "filename": file.filename,
+        "language": language,
+        "speech_detected": bool(text),
+    }
 
 
 # ---------------------------------------------------------

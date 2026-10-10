@@ -11,7 +11,7 @@ Conformément à la spécification fonctionnelle et au schéma d'architecture, l
 
 ```http
 POST /api/trips/analyze-audio  -> Analyse directe d'un enregistrement vocal (WAV, WebM, MP3) via WhisperAI
-POST /api/stt/transcribe       -> Transcription audio brute en texte français
+POST /api/analyzeVoice         -> Transcription d'un fichier audio en texte via Whisper local
 POST /api/trips/analyze        -> Analyse de la demande en texte libre (ou transcription)
 POST /api/destinations/search  -> Suggestions de sites & hébergements liO en Occitanie
 POST /api/trains/search        -> Horaires liO réels, Jauge groupe (50 pax) & Indice Confiance (/100)
@@ -60,6 +60,8 @@ docker compose up -d --build
 ```
 
 - **API & Swagger Docs** : `http://localhost:8000/docs`
+- **Frontend de test** (toutes les routes + enregistrement micro) : `http://localhost:8000/test`
+  > Le micro n'est autorisé par le navigateur qu'en contexte sécurisé : utilisez bien `localhost` (pas l'IP de la machine).
 - **Santé / Healthcheck** : `http://localhost:8000/health`
 - **Persistance** : la base SQLite est persistée dans le volume `./data/lio.db`.
 
